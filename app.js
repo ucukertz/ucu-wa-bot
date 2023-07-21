@@ -342,8 +342,7 @@ async function midjourney(query, msg, attempt = 0) {
 
 // Always
 
-// let fikar = "7102"
-let fikar = "6522"
+let fikar = "7102"
 let hehe_curse = false
 let curse
 function fikar_hehe(msg) {
