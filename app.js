@@ -1,4 +1,5 @@
 const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js')
+const apis = require("./apis.json")
 const keys = require("./keys.json")
 const axios = require("axios")
 const { Configuration, OpenAIApi } = require("openai")
@@ -33,8 +34,9 @@ client.on('message', async msg => {
     }
     else if (msg.body.startsWith("!menu")) {
       msg.reply("*Ucukertz WA bot*\n" +
-      "*!ai* YouBot\n" +
+      "*!ai* HuggingChat\n" +
       "*!cai* ChatGPT\n" +
+      "*!yai* YouBot\n" +
       "*!img* Stable Diffusion\n" +
       "*!i.some* Something v2\n" +
       "*!i.cntr* Counterfeit\n" +
@@ -49,11 +51,15 @@ client.on('message', async msg => {
     }
     else if (msg.body.startsWith("!ai ")){
       query = msg.body.replace("!ai ", "")
-      youchat(query, msg)
+      huggingchat(query, msg)
     }
     else if (msg.body.startsWith("!cai ")){
       query = msg.body.replace("!cai ", "")
       gpt35(query, msg)
+    }
+    else if (msg.body.startsWith("!yai ")){
+      query = msg.body.replace("!yai ", "")
+      youchat(query, msg)
     }
     else if (msg.body.startsWith("!img ")){
       query = msg.body.replace("!img ", "")
@@ -97,8 +103,9 @@ function errReply(err) {
 
 function what(query, msg) {
   switch (query) {
-    case "ai": msg.reply("YouBot GPT4, ask anything. Capable of surfing the web (fresh info) but input limit is small and often breaks."); break;
+    case "ai": msg.reply("HuggingChat, ask anything. Uses OpenAssistant as model backend. Open source ChatGPT competitor."); break;
     case "cai": msg.reply("ChatGPT GPT3.5-turbo, ask anything. Capable of receiving large input but have 2021 training cutoff."); break;
+    case "yai": msg.reply("YouBot GPT4, ask anything. Capable of surfing the web (fresh info) but input limit is small and often breaks."); break;
     case "img": msg.reply("Stable Diffusion V2.1 text-to-image."); break;
     case "i.some": msg.reply("[SD] Something V2.2 text-to-image. Cutesy anime-style."); break;
     case "i.cntr": msg.reply("[SD] Counterfeit V2.5 text-to-image. Eerie(?) anime-style."); break;
@@ -153,6 +160,35 @@ async function youchat(query, msg, attempt = 0) {
     msg.reply(errReply(err)) 
   }
 }
+
+// HuggingChat
+
+async function huggingchat(query, msg, attempt = 0) {
+  try {
+    let res = await axios({
+      method: 'post',
+      url: apis.HUGGING_CHAT_HOST+"/",
+      data: query,
+      responseType: 'arraybuffer',
+      headers: {
+       "x-use-cache": false,
+       "Authorization": "Bearer "+keys.HF_API_KEY
+      }
+    })
+    msg.reply(res)
+  } catch (err) {
+    console.log(err)
+    if (err.toString().includes("500")) {
+      if (!attempt) msg.react("⏳")
+      attempt++
+      if (attempt < 5) setTimeout(async () => huggingchat(query, msg, attempt), 10000)
+      else msg.reply(errReply(err))
+      return
+    }
+    msg.reply(errReply(err)) 
+  }
+}
+
 
 // Huggingface
 
