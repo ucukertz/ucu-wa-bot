@@ -169,9 +169,8 @@ async function huggingchat(query, msg, attempt = 0) {
       method: 'get',
       url: apis.HUGGING_CHAT_HOST+"/",
       data: query,
-      responseType: 'arraybuffer',
     })
-    msg.reply(res)
+    msg.reply(res.data)
   } catch (err) {
     console.log(err)
     if (err.toString().includes("500")) {
