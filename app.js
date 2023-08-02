@@ -166,14 +166,10 @@ async function youchat(query, msg, attempt = 0) {
 async function huggingchat(query, msg, attempt = 0) {
   try {
     let res = await axios({
-      method: 'post',
+      method: 'get',
       url: apis.HUGGING_CHAT_HOST+"/",
       data: query,
       responseType: 'arraybuffer',
-      headers: {
-       "x-use-cache": false,
-       "Authorization": "Bearer "+keys.HF_API_KEY
-      }
     })
     msg.reply(res)
   } catch (err) {
