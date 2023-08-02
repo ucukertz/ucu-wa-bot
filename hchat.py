@@ -1,4 +1,4 @@
-# nohup python hugchat.py &
+# nohup python hchat.py &
 # pkill -9 python
 
 from hugchat import hugchat

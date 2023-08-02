@@ -414,3 +414,5 @@ app.get('/qr', (req, res) => {
 app.get('/alive', (req, res) => {
     res.send('GPT is alive')
 })
+
+app.listen(3000)
