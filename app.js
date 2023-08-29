@@ -6,7 +6,6 @@ const { Configuration, OpenAIApi } = require("openai")
 const qrcode = require('qrcode-terminal')
 
 const retard = "JS being retarded"
-const mloading = "Loading the AI. Please wait warmly."
 
 const client = new Client({
     authStrategy: new LocalAuth(),
@@ -34,15 +33,16 @@ client.on('message', async msg => {
     }
     else if (msg.body.startsWith("!menu")) {
       msg.reply("*Ucukertz WA bot*\n" +
-      "*!ai* HuggingChat\n" +
+      "*!ai* Youbot\n" +
+      "*!hai* HuggingChat\n" +
       "*!cai* ChatGPT\n" +
-      "*!yai* YouBot\n" +
       "*!img* Stable Diffusion\n" +
       "*!i.some* Something v2\n" +
       "*!i.cntr* Counterfeit\n" +
       "*!i.modi* Modern Disney\n" +
       "*!i.prot* Protogen\n" +
       "*!i.mid* OpenMidjourney\n" +
+      "*!what* More explanation for above commands (ex: '!what ai')\n" +
       "")
     }
     else if (msg.body.startsWith("!what")) {
@@ -51,15 +51,15 @@ client.on('message', async msg => {
     }
     else if (msg.body.startsWith("!ai ")){
       query = msg.body.replace("!ai ", "")
+      youchat(query, msg)
+    }
+    else if (msg.body.startsWith("!hai ")){
+      query = msg.body.replace("!hai ", "")
       huggingchat(query, msg)
     }
     else if (msg.body.startsWith("!cai ")){
       query = msg.body.replace("!cai ", "")
       gpt35(query, msg)
-    }
-    else if (msg.body.startsWith("!yai ")){
-      query = msg.body.replace("!yai ", "")
-      youchat(query, msg)
     }
     else if (msg.body.startsWith("!img ")){
       query = msg.body.replace("!img ", "")
@@ -90,6 +90,13 @@ client.on('message', async msg => {
     }
 
     // Always
+    if (msg.body.includes("📚") && msg.body.includes("Sources"))
+    youchatid = msg.from
+    if (msg.from == youchatid && youchatbusy) {
+      youchatmsg.reply(msg.body)
+      youchatbusy = false
+    }
+
     fikar_hehe(msg)
 
     // Gacha
@@ -103,15 +110,16 @@ function errReply(err) {
 
 function what(query, msg) {
   switch (query) {
-    case "ai": msg.reply("HuggingChat, ask anything. Uses OpenAssistant as model backend. Open source ChatGPT competitor."); break;
+    case "ai": msg.reply("YouBot GPT4, ask anything. Capable of surfing the web (fresh info) but sometimes sleeps."); break;
+    case "hai": msg.reply("HuggingChat, ask anything. Uses OpenAssistant as model backend. Open source ChatGPT competitor."); break;
     case "cai": msg.reply("ChatGPT GPT3.5-turbo, ask anything. Capable of receiving large input but have 2021 training cutoff."); break;
-    case "yai": msg.reply("YouBot GPT4, ask anything. Capable of surfing the web (fresh info) but input limit is small and often breaks."); break;
     case "img": msg.reply("Stable Diffusion V2.1 text-to-image."); break;
     case "i.some": msg.reply("[SD] Something V2.2 text-to-image. Cutesy anime-style."); break;
     case "i.cntr": msg.reply("[SD] Counterfeit V2.5 text-to-image. Eerie(?) anime-style."); break;
     case "i.modi": msg.reply("[SD] Modern Disney Diffusion text-to-image. Disney-style."); break;
     case "i.prot": msg.reply("[SD] Protogen x3.4 text-to-image. Tuned for photorealism."); break;
     case "i.mid": msg.reply("Open source version of Midjourney V4 text-to-image."); break;
+    case "what": msg.reply("*U wot m8?*"); break;
     default: msg.reply(query + ' (2)\nSend "!menu" for command list'); break;
   }
 }
@@ -143,21 +151,27 @@ async function gpt35(query, msg) {
 
 // Youchat
 
-async function youchat(query, msg, attempt = 0) {
-  let url = "https://api.betterapi.net/youchat?inputs="+query+"&key="+keys.YOUCHAT_API_KEY
+let youchatid = ""
+let youchatmsg = ""
+let youchatbusy = false
+async function youchat(query, msg) {
   try {
-    let res = await axios.get(url)
-    msg.reply(res.data.generated_text)
-  } catch (err) {
-    console.log(err)
-    if (err.toString().includes("503")) {
-      if (!attempt) msg.react("⏳")
-      attempt++
-      if (attempt < 5) setTimeout(async () => youchat(query, msg, attempt), 10000)
-      else msg.reply(errReply(err))
+    if (youchatid == "") {
+      msg.reply(errReply("Youbot is sleeping 💤"))
       return
     }
-    msg.reply(errReply(err)) 
+    if (youchatbusy) {
+      msg.react("❌")
+      return
+    }
+
+    youchatbusy = true
+    youchatmsg = msg
+    client.sendMessage(youchatid, query)
+  } catch (err) {
+    console.log(err)
+    msg.reply(errReply(err))
+    youchatbusy = false
   }
 }
 
@@ -386,7 +400,7 @@ function fikar_hehe(msg) {
       hehe_curse = true
       curse = setTimeout(() => {
         hehe_curse = false
-      }, 60000*60*24)
+      }, 60000*60*24*3)
     }
     if (msg.author.includes(fikar) && hehe_curse) {
       let dr_sec = Math.random()*120
