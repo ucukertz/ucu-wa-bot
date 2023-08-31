@@ -1,11 +1,13 @@
-const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js')
-const apis = require("./apis.json")
-const keys = require("./keys.json")
-const axios = require("axios")
-const { Configuration, OpenAIApi } = require("openai")
-const qrcode = require('qrcode-terminal')
+import wajs from 'whatsapp-web.js'
+const { Client, LocalAuth, MessageMedia } = wajs
+import apis from "./apis.json" assert { type: "json" }
+import keys from "./keys.json" assert { type: "json" }
+import axios from "axios"
+import { Configuration, OpenAIApi } from "openai"
+import qrcode from 'qrcode-terminal'
+import {fileTypeFromBuffer} from 'file-type'
 
-const retard = "JS being retarded"
+const whaa = "How did it get here?"
 
 const client = new Client({
     authStrategy: new LocalAuth(),
@@ -14,7 +16,7 @@ const client = new Client({
     }
 })
 
-newest_qr = ""
+let newest_qr = ""
 client.on('qr', (qr) => {
     // Generate and scan this code with your phone
     console.log('QR RECEIVED', qr)
@@ -100,6 +102,7 @@ client.on('message', async msg => {
     fikar_hehe(msg)
 
     // Gacha
+    meem(msg)
 })
 
 client.initialize();
@@ -145,7 +148,7 @@ async function gpt35(query, msg) {
     msg.reply(ans)
   } catch (err) {
     if (err) msg.reply(errReply(err)) 
-    else msg.reply(errReply(retard))
+    else msg.reply(errReply(whaa))
   }
 }
 
@@ -223,7 +226,7 @@ async function stable(query, msg, attempt = 0) {
       if (!attempt) msg.react("⏳")
       attempt++
       if (attempt < 10) setTimeout(async () => stable(query, msg, attempt), 60000)
-      else msg.reply(errReply(retard))
+      else msg.reply(errReply(whaa))
       return
     }
     msg.reply(errReply(err)) 
@@ -254,7 +257,7 @@ async function something(query, msg, attempt = 0) {
       if (!attempt) msg.react("⏳")
       attempt++
       if (attempt < 10) setTimeout(async () => something(query, msg, attempt), 60000)
-      else msg.reply(errReply(retard))
+      else msg.reply(errReply(whaa))
       return
     }
     msg.reply(errReply(err)) 
@@ -285,7 +288,7 @@ async function counterfeit(query, msg, attempt = 0) {
       if (!attempt) msg.react("⏳")
       attempt++
       if (attempt < 10) setTimeout(async () => something(query, msg, attempt), 60000)
-      else msg.reply(errReply(retard))
+      else msg.reply(errReply(whaa))
       return
     }
     msg.reply(errReply(err)) 
@@ -316,7 +319,7 @@ async function moderndisney(query, msg, attempt = 0) {
       if (!attempt) msg.react("⏳")
       attempt++
       if (attempt < 10) setTimeout(async () => something(query, msg, attempt), 60000)
-      else msg.reply(errReply(retard))
+      else msg.reply(errReply(whaa))
       return
     }
     msg.reply(errReply(err)) 
@@ -347,7 +350,7 @@ async function protogen(query, msg, attempt = 0) {
       if (!attempt) msg.react("⏳")
       attempt++
       if (attempt < 10) setTimeout(async () => something(query, msg, attempt), 60000)
-      else msg.reply(errReply(retard))
+      else msg.reply(errReply(whaa))
       return
     }
     msg.reply(errReply(err)) 
@@ -378,7 +381,7 @@ async function midjourney(query, msg, attempt = 0) {
       if (!attempt) msg.react("⏳")
       attempt++
       if (attempt < 10) setTimeout(async () => something(query, msg, attempt), 60000)
-      else msg.reply(errReply(retard))
+      else msg.reply(errReply(whaa))
       return
     }
     msg.reply(errReply(err)) 
@@ -413,7 +416,50 @@ function fikar_hehe(msg) {
   }
 }
 
-const express = require('express')
+// Gacha
+
+async function meem(msg) {
+  if (Math.random() > 0.04) return
+  if (msg.body == "") msg.body = "say whatever you want"
+  let query = `Respond to this with two sentences. Be as memey and brief as possible: ${msg.body}\n\n
+               Only reply with your response.` 
+  try {
+    let aires = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: [{role: "user", content: query}],
+      temperature: 0.5,
+      max_tokens: 2000,
+      frequency_penalty: 2,
+      presence_penalty: 0.0,
+    })
+    let aians = aires.data.choices[0].message.content
+    let meemreq = {
+      "text" : aians,
+      "safe": true,
+      "redirect": true
+    }
+
+    let memeres = await axios({
+      method: 'post',
+      url: "https://api.memegen.link/images/automatic",
+      data: JSON.stringify(meemreq),
+      responseType: 'arraybuffer',
+    })
+    let mime = await fileTypeFromBuffer(Buffer.from(memeres.data, 'binary'))
+
+    let ans = new MessageMedia
+    ans.data = Buffer.from(memeres.data, 'binary').toString('base64')
+    ans.mimetype = mime.mime
+    console.log(ans.mimetype)
+
+    msg.reply(ans)
+  } catch (err) {
+    if (err) msg.reply(errReply(err)) 
+    else msg.reply(errReply(whaa))
+  }
+}
+
+import express from 'express'
 const app = express()
 
 app.get('/qr', (req, res) => {
