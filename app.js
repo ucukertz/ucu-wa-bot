@@ -428,7 +428,7 @@ async function meem(msg) {
     let aires = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       messages: [{role: "user", content: query}],
-      temperature: 1.5,
+      temperature: 2,
       max_tokens: 2000,
       frequency_penalty: 2,
       presence_penalty: 0.0,
