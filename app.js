@@ -29,6 +29,7 @@ client.on('ready', () => {
 })
 
 client.on('message', async msg => {
+    let query
     // Bots
     if (msg.body.startsWith("!ping")) {
       msg.reply('pong');
@@ -144,7 +145,7 @@ async function gpt35(query, msg) {
       frequency_penalty: 2,
       presence_penalty: 0.0,
     })
-    ans = res.data.choices[0].message.content
+    let ans = res.data.choices[0].message.content
     msg.reply(ans)
   } catch (err) {
     if (err) msg.reply(errReply(err)) 
@@ -248,7 +249,7 @@ async function something(query, msg, attempt = 0) {
     let ans = new MessageMedia
     ans.mimetype = "image/jpeg"
     ans.data = Buffer.from(res.data, 'binary').toString('base64')
-    blacc = (ans.data.match(/KKKKACiiigAooooA/g) || []).length
+    let blacc = (ans.data.match(/KKKKACiiigAooooA/g) || []).length
     if (blacc < 170) msg.reply(ans)
     else msg.reply("Black image was received instead of waifu. Saad.\nBlacc: " + blacc.toString())
   } catch (err) {
@@ -279,7 +280,7 @@ async function counterfeit(query, msg, attempt = 0) {
     let ans = new MessageMedia
     ans.mimetype = "image/jpeg"
     ans.data = Buffer.from(res.data, 'binary').toString('base64')
-    blacc = (ans.data.match(/KKKKACiiigAooooA/g) || []).length
+    let blacc = (ans.data.match(/KKKKACiiigAooooA/g) || []).length
     if (blacc < 170) msg.reply(ans)
     else msg.reply("Black image was received instead of waifu. Saad.\nBlacc: " + blacc.toString())
   } catch (err) {
@@ -310,7 +311,7 @@ async function moderndisney(query, msg, attempt = 0) {
     let ans = new MessageMedia
     ans.mimetype = "image/jpeg"
     ans.data = Buffer.from(res.data, 'binary').toString('base64')
-    blacc = (ans.data.match(/KKKKACiiigAooooA/g) || []).length
+    let blacc = (ans.data.match(/KKKKACiiigAooooA/g) || []).length
     if (blacc < 170) msg.reply(ans)
     else msg.reply("Black image was received. Saad.\nBlacc: " + blacc.toString())
   } catch (err) {
@@ -341,7 +342,7 @@ async function protogen(query, msg, attempt = 0) {
     let ans = new MessageMedia
     ans.mimetype = "image/jpeg"
     ans.data = Buffer.from(res.data, 'binary').toString('base64')
-    blacc = (ans.data.match(/KKKKACiiigAooooA/g) || []).length
+    let blacc = (ans.data.match(/KKKKACiiigAooooA/g) || []).length
     if (blacc < 170) msg.reply(ans)
     else msg.reply("Black image was received. Saad.\nBlacc: " + blacc.toString())
   } catch (err) {
@@ -372,7 +373,7 @@ async function midjourney(query, msg, attempt = 0) {
     let ans = new MessageMedia
     ans.mimetype = "image/jpeg"
     ans.data = Buffer.from(res.data, 'binary').toString('base64')
-    blacc = (ans.data.match(/KKKKACiiigAooooA/g) || []).length
+    let blacc = (ans.data.match(/KKKKACiiigAooooA/g) || []).length
     if (blacc < 170) msg.reply(ans)
     else msg.reply("Black image was received. Saad.\nBlacc: " + blacc.toString())
   } catch (err) {
@@ -427,7 +428,7 @@ async function meem(msg) {
     let aires = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       messages: [{role: "user", content: query}],
-      temperature: 0.5,
+      temperature: 1.5,
       max_tokens: 2000,
       frequency_penalty: 2,
       presence_penalty: 0.0,
