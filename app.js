@@ -1,7 +1,7 @@
 import wajs from 'whatsapp-web.js'
 const { Client, LocalAuth, MessageMedia } = wajs
-import apis from "./apis.json" assert { type: "json" }
-import keys from "./keys.json" assert { type: "json" }
+import apis from "./apis.js"
+import keys from "./keys.js"
 import axios from "axios"
 import { Configuration, OpenAIApi } from "openai"
 import qrcode from 'qrcode-terminal'
@@ -420,7 +420,7 @@ function fkr_hehe(msg) {
 // Gacha
 
 async function meem(msg) {
-  if (Math.random() > 0.05) return
+  if (Math.random() > 0.03) return
   let aians = "none"
   try {
     if (msg.body != "") {
