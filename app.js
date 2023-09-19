@@ -438,6 +438,9 @@ async function meem(msg) {
     } else {
       aians = getRandThing()
     }
+
+    if (aians.split(/\s+/).length() > 10)
+    aians = aians.split(/\s+/).slice(0, 2).join(" ")
     
     let meemreq = {
       "text" : aians,
@@ -456,7 +459,6 @@ async function meem(msg) {
     let ans = new MessageMedia
     ans.data = Buffer.from(memeres.data, 'binary').toString('base64')
     ans.mimetype = mime.mime
-    console.log(ans.mimetype)
 
     msg.reply(ans)
   } catch (err) {
