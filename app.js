@@ -439,7 +439,7 @@ async function meem(msg) {
       aians = getRandThing()
     }
 
-    if (aians.split(/\s+/).length() > 10)
+    if (aians.length > 100) {}
     aians = aians.split(/\s+/).slice(0, 2).join(" ")
     
     let meemreq = {
