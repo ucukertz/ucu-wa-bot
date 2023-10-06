@@ -5,9 +5,9 @@ import keys from "./keys.js"
 import axios from "axios"
 import { Configuration, OpenAIApi } from "openai"
 import qrcode from 'qrcode-terminal'
-import {fileTypeFromBuffer} from 'file-type'
+import { fileTypeFromBuffer } from 'file-type'
 
-const whaa = "How did it get here?"
+const giveup = "Owari da"
 
 const client = new Client({
     authStrategy: new LocalAuth(),
@@ -88,9 +88,6 @@ client.on('message', async msg => {
       query = msg.body.replace("!i.mid ", "")
       midjourney(query, msg)
     }
-    else if (msg.body.startsWith("/")){
-      msg.reply('Nice "/"\nSend "!menu" for command list')
-    }
 
     // Always
     if (msg.body.includes("📚") && msg.body.includes("Sources"))
@@ -103,7 +100,8 @@ client.on('message', async msg => {
     fkr_hehe(msg)
 
     // Gacha
-    meem(msg)
+    tokke(msg)
+    tokke_meem(msg)
 })
 
 client.initialize();
@@ -148,8 +146,7 @@ async function gpt35(query, msg) {
     let ans = res.data.choices[0].message.content
     msg.reply(ans)
   } catch (err) {
-    if (err) msg.reply(errReply(err)) 
-    else msg.reply(errReply(whaa))
+    msg.reply(errReply(err))
   }
 }
 
@@ -227,7 +224,7 @@ async function stable(query, msg, attempt = 0) {
       if (!attempt) msg.react("⏳")
       attempt++
       if (attempt < 10) setTimeout(async () => stable(query, msg, attempt), 60000)
-      else msg.reply(errReply(whaa))
+      else msg.reply(errReply(giveup))
       return
     }
     msg.reply(errReply(err)) 
@@ -258,7 +255,7 @@ async function something(query, msg, attempt = 0) {
       if (!attempt) msg.react("⏳")
       attempt++
       if (attempt < 10) setTimeout(async () => something(query, msg, attempt), 60000)
-      else msg.reply(errReply(whaa))
+      else msg.reply(errReply(giveup))
       return
     }
     msg.reply(errReply(err)) 
@@ -289,7 +286,7 @@ async function counterfeit(query, msg, attempt = 0) {
       if (!attempt) msg.react("⏳")
       attempt++
       if (attempt < 10) setTimeout(async () => something(query, msg, attempt), 60000)
-      else msg.reply(errReply(whaa))
+      else msg.reply(errReply(giveup))
       return
     }
     msg.reply(errReply(err)) 
@@ -320,7 +317,7 @@ async function moderndisney(query, msg, attempt = 0) {
       if (!attempt) msg.react("⏳")
       attempt++
       if (attempt < 10) setTimeout(async () => something(query, msg, attempt), 60000)
-      else msg.reply(errReply(whaa))
+      else msg.reply(errReply(giveup))
       return
     }
     msg.reply(errReply(err)) 
@@ -351,7 +348,7 @@ async function protogen(query, msg, attempt = 0) {
       if (!attempt) msg.react("⏳")
       attempt++
       if (attempt < 10) setTimeout(async () => something(query, msg, attempt), 60000)
-      else msg.reply(errReply(whaa))
+      else msg.reply(errReply(giveup))
       return
     }
     msg.reply(errReply(err)) 
@@ -382,7 +379,7 @@ async function midjourney(query, msg, attempt = 0) {
       if (!attempt) msg.react("⏳")
       attempt++
       if (attempt < 10) setTimeout(async () => something(query, msg, attempt), 60000)
-      else msg.reply(errReply(whaa))
+      else msg.reply(errReply(giveup))
       return
     }
     msg.reply(errReply(err)) 
@@ -404,7 +401,7 @@ function fkr_hehe(msg) {
       hehe_curse = true
       curse = setTimeout(() => {
         hehe_curse = false
-      }, 60000*60*24*3)
+      }, 60000*60*24*5)
     }
     if (msg.author.includes(fkr) && hehe_curse) {
       let dr_sec = Math.random()*120
@@ -419,25 +416,45 @@ function fkr_hehe(msg) {
 
 // Gacha
 
-async function meem(msg) {
-  if (Math.random() > 0.03) return
+async function tokke(msg) {
+  if (Math.random() > 0.01) return
+  try {
+    if (msg.body == "") msg.body = getRandThing()
+    let query = msg.body
+    let aires = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: [{role: "system", content: "Respond to user messages with two sentences at most." +
+                                           "Be as memey as possible."}, 
+      {role: "user", content: query}],
+      temperature: 1.5,
+      max_tokens: 2000,
+      frequency_penalty: 2,
+      presence_penalty: 0.0,
+    })
+    let aians = aires.data.choices[0].message.content
+    msg.reply(aians)
+  } catch (err) {
+    msg.reply(errReply(err))
+  }
+}
+
+async function tokke_meem(msg) {
+  if (Math.random() > 0.01) return
   let aians = "none"
   try {
-    if (msg.body != "") {
-      let query = `Respond to this with two sentences. Be as memey and brief as possible: ${msg.body}\n\n
-                   Only reply with your response.` 
-      let aires = await openai.createChatCompletion({
-        model: "gpt-3.5-turbo",
-        messages: [{role: "user", content: query}],
-        temperature: 1.5,
-        max_tokens: 2000,
-        frequency_penalty: 2,
-        presence_penalty: 0.0,
-      })
-      aians = aires.data.choices[0].message.content
-    } else {
-      aians = getRandThing()
-    }
+    if (msg.body == "") msg.body = getRandThing()
+    let query = msg.body
+    let aires = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: [{role: "system", content: "Respond to user messages with two sentences at most." +
+                                           "Be as memey as possible."}, 
+      {role: "user", content: query}],
+      temperature: 1.5,
+      max_tokens: 2000,
+      frequency_penalty: 2,
+      presence_penalty: 0.0,
+    })
+    aians = aires.data.choices[0].message.content
 
     if (aians.length > 100)
     aians = aians.split(/\s+/).slice(0, 2).join(" ")
@@ -465,8 +482,7 @@ async function meem(msg) {
     if (err.toString().includes("400")) {
       msg.reply(errReply(`Bad meem: ${aians}`))
     }
-    else if (err) msg.reply(errReply(err)) 
-    else msg.reply(errReply(whaa))
+    else msg.reply(errReply(err))
   }
 }
 
