@@ -7,7 +7,7 @@ import { Configuration, OpenAIApi } from "openai"
 import qrcode from 'qrcode-terminal'
 import { fileTypeFromBuffer } from 'file-type'
 
-const giveup = "Owari da"
+const giveup = "Owari da. The request has fallen. Megabytes must free."
 
 const client = new Client({
     authStrategy: new LocalAuth(),
@@ -91,10 +91,16 @@ client.on('message', async msg => {
 
     // Always
     if (msg.body.includes("📚") && msg.body.includes("Sources"))
-    youchatid = msg.from
-    if (msg.from == youchatid && youchatbusy) {
-      youchatmsg.reply(msg.body)
-      youchatbusy = false
+    youchatId = msg.from
+    if (msg.from == youchatId && youchatBusy) {
+      if (!msg.body.includes("great to meet you!")) {
+        youchatMsg.reply(msg.body)
+        youchatBusy = false
+      } else {
+        youchatMsg.react("⏳")
+        youchatBusy = false
+        youchat("", youchatMsg)
+      }
     }
 
     fkr_hehe(msg)
@@ -152,27 +158,32 @@ async function gpt35(query, msg) {
 
 // Youchat
 
-let youchatid = ""
-let youchatmsg = ""
-let youchatbusy = false
+let youchatId = ""
+let youchatMsg = ""
+let youchatQuery = ""
+let youchatBusy = false
 async function youchat(query, msg) {
+  if (!query) {
+    query = youchatQuery
+  }
   try {
-    if (youchatid == "") {
+    if (youchatId == "") {
       msg.reply(errReply("Youbot is sleeping 💤"))
       return
     }
-    if (youchatbusy) {
+    if (youchatBusy) {
       msg.react("❌")
       return
     }
 
-    youchatbusy = true
-    youchatmsg = msg
-    client.sendMessage(youchatid, query)
+    youchatBusy = true
+    youchatMsg = msg
+    youchatQuery = query
+    client.sendMessage(youchatId, youchatQuery)
   } catch (err) {
     console.log(err)
     msg.reply(errReply(err))
-    youchatbusy = false
+    youchatBusy = false
   }
 }
 
