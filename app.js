@@ -45,6 +45,7 @@ client.on('message', async msg => {
       "*!i.modi* Modern Disney\n" +
       "*!i.prot* Protogen\n" +
       "*!i.mid* OpenMidjourney\n" +
+      "*!meme* Memegen\n" +
       "*!what* More explanation for above commands (ex: '!what ai')\n" +
       "")
     }
@@ -88,6 +89,10 @@ client.on('message', async msg => {
       query = msg.body.replace("!i.mid ", "")
       midjourney(query, msg)
     }
+    else if (msg.body.startsWith("!meme ")){
+      query = msg.body.replace("!meme ", "")
+      meme(msg, query)
+    }
 
     // Always
     if (msg.body.includes("📚") && msg.body.includes("Sources"))
@@ -107,7 +112,6 @@ client.on('message', async msg => {
 
     // Gacha
     tokke(msg)
-    tokke_meem(msg)
 })
 
 client.initialize();
@@ -127,6 +131,7 @@ function what(query, msg) {
     case "i.modi": msg.reply("[SD] Modern Disney Diffusion text-to-image. Disney-style."); break;
     case "i.prot": msg.reply("[SD] Protogen x3.4 text-to-image. Tuned for photorealism."); break;
     case "i.mid": msg.reply("Open source version of Midjourney V4 text-to-image."); break;
+    case "meme": msg.reply("Generate memes assisted with generative AI."); break;
     case "what": msg.reply("*U wot m8?*"); break;
     default: msg.reply(query + ' (2)\nSend "!menu" for command list'); break;
   }
@@ -425,32 +430,39 @@ function fkr_hehe(msg) {
   }
 }
 
-// Gacha
-
-async function tokke(msg) {
-  if (Math.random() > 0.01) return
+async function meme(msg, query) {
   try {
-    if (msg.body == "") msg.body = getRandThing()
-    let query = msg.body
-    let aires = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo",
-      messages: [{role: "system", content: "Respond to user messages with two sentences at most." +
-                                           "Be as memey as possible."}, 
-      {role: "user", content: query}],
-      temperature: 1.5,
-      max_tokens: 2000,
-      frequency_penalty: 2,
-      presence_penalty: 0.0,
+    let memereq = {
+      "text" : query,
+      "safe": true,
+      "redirect": true
+    }
+
+    let memeres = await axios({
+      method: 'post',
+      url: "https://api.memegen.link/images/automatic",
+      data: JSON.stringify(memereq),
+      responseType: 'arraybuffer',
     })
-    let aians = aires.data.choices[0].message.content
-    msg.reply(aians)
+    let mime = await fileTypeFromBuffer(Buffer.from(memeres.data, 'binary'))
+
+    let ans = new MessageMedia
+    ans.data = Buffer.from(memeres.data, 'binary').toString('base64')
+    ans.mimetype = mime.mime
+
+    msg.reply(ans)
   } catch (err) {
-    msg.reply(errReply(err))
+    if (err.toString().includes("400")) {
+      msg.reply(errReply(`Bad meem: ${query}`))
+    }
+    else msg.reply(errReply(err))
   }
 }
 
-async function tokke_meem(msg) {
-  if (Math.random() > 0.01) return
+// Gacha
+
+async function tokke(msg) {
+  if (Math.random() > 0.02) return
   let aians = "none"
   try {
     if (msg.body == "") msg.body = getRandThing()
@@ -470,7 +482,7 @@ async function tokke_meem(msg) {
     if (aians.length > 100)
     aians = aians.split(/\s+/).slice(0, 2).join(" ")
     
-    let meemreq = {
+    let memereq = {
       "text" : aians,
       "safe": true,
       "redirect": true
@@ -479,7 +491,7 @@ async function tokke_meem(msg) {
     let memeres = await axios({
       method: 'post',
       url: "https://api.memegen.link/images/automatic",
-      data: JSON.stringify(meemreq),
+      data: JSON.stringify(memereq),
       responseType: 'arraybuffer',
     })
     let mime = await fileTypeFromBuffer(Buffer.from(memeres.data, 'binary'))
