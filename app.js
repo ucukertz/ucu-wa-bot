@@ -39,11 +39,13 @@ client.on('message', async msg => {
       "*!ai* Youbot\n" +
       "*!hai* HuggingChat\n" +
       "*!cai* ChatGPT\n" +
-      "*!img* Stable Diffusion\n" +
+      "*!img* Stable Diffusion XL\n" +
+      "*!i.sd* Stable Diffusion\n" +
       "*!i.some* Something v2\n" +
       "*!i.cntr* Counterfeit\n" +
       "*!i.modi* Modern Disney\n" +
       "*!i.prot* Protogen\n" +
+      "*!i.pix* PixelArt\n" +
       "*!i.mid* OpenMidjourney\n" +
       "*!meme* Memegen\n" +
       "*!what* More explanation for above commands (ex: '!what ai')\n" +
@@ -67,6 +69,10 @@ client.on('message', async msg => {
     }
     else if (msg.body.startsWith("!img ")){
       query = msg.body.replace("!img ", "")
+      sdxl(query, msg)
+    }
+    else if (msg.body.startsWith("!i.sd ")){
+      query = msg.body.replace("!i.sd ", "")
       stable(query, msg)
     }
     else if (msg.body.startsWith("!i.some ")){
@@ -84,6 +90,10 @@ client.on('message', async msg => {
     else if (msg.body.startsWith("!i.prot ")){
       query = msg.body.replace("!i.prot ", "")
       protogen(query, msg)
+    }
+    else if (msg.body.startsWith("!i.pix ")){
+      query = msg.body.replace("!i.pix ", "")
+      pixel(query, msg)
     }
     else if (msg.body.startsWith("!i.mid ")){
       query = msg.body.replace("!i.mid ", "")
@@ -125,11 +135,13 @@ function what(query, msg) {
     case "ai": msg.reply("YouBot GPT4, ask anything. Capable of surfing the web (fresh info) but sometimes sleeps."); break;
     case "hai": msg.reply("HuggingChat, ask anything. Uses OpenAssistant as model backend. Open source ChatGPT competitor."); break;
     case "cai": msg.reply("ChatGPT GPT3.5-turbo, ask anything. Capable of receiving large input but have 2021 training cutoff."); break;
-    case "img": msg.reply("Stable Diffusion V2.1 text-to-image."); break;
+    case "img": msg.reply("Stable Diffusion XL text-to-image. Massive breakthrough compared to earlier versions of SD."); break;
+    case "i.sd": msg.reply("Stable Diffusion V2.1 text-to-image."); break;
     case "i.some": msg.reply("[SD] Something V2.2 text-to-image. Cutesy anime-style."); break;
     case "i.cntr": msg.reply("[SD] Counterfeit V2.5 text-to-image. Eerie(?) anime-style."); break;
     case "i.modi": msg.reply("[SD] Modern Disney Diffusion text-to-image. Disney-style."); break;
     case "i.prot": msg.reply("[SD] Protogen x3.4 text-to-image. Tuned for photorealism."); break;
+    case "i.pix": msg.reply("[SDXL] Pixel Art LoRa text-to-image"); break;
     case "i.mid": msg.reply("Open source version of Midjourney V4 text-to-image."); break;
     case "meme": msg.reply("Generate memes assisted with generative AI."); break;
     case "what": msg.reply("*U wot m8?*"); break;
@@ -217,6 +229,35 @@ async function huggingchat(query, msg, attempt = 0) {
 
 
 // Huggingface
+
+async function sdxl(query, msg, attempt = 0) {
+  try {
+    let res = await axios({
+      method: 'post',
+      url: 'https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0',
+      data: {inputs: query+", "+Math.random().toString()},
+      responseType: 'arraybuffer',
+      headers: {
+       "x-use-cache": false,
+       "Authorization": "Bearer "+keys.HF_API_KEY
+      }
+    })
+    let ans = new MessageMedia
+    ans.mimetype = "image/jpeg"
+    ans.data = Buffer.from(res.data, 'binary').toString('base64')
+    msg.reply(ans)
+  } catch (err) {
+    console.log(err)
+    if (err.toString().includes("503")) {
+      if (!attempt) msg.react("⏳")
+      attempt++
+      if (attempt < 10) setTimeout(async () => sdxl(query, msg, attempt), 60000)
+      else msg.reply(errReply(giveup))
+      return
+    }
+    msg.reply(errReply(err)) 
+  }
+}
 
 async function stable(query, msg, attempt = 0) {
   try {
@@ -364,6 +405,35 @@ async function protogen(query, msg, attempt = 0) {
       if (!attempt) msg.react("⏳")
       attempt++
       if (attempt < 10) setTimeout(async () => something(query, msg, attempt), 60000)
+      else msg.reply(errReply(giveup))
+      return
+    }
+    msg.reply(errReply(err)) 
+  }
+}
+
+async function pixel(query, msg, attempt = 0) {
+  try {
+    let res = await axios({
+      method: 'post',
+      url: 'https://api-inference.huggingface.co/models/nerijs/pixel-art-xl',
+      data: {inputs: query+", "+Math.random().toString()},
+      responseType: 'arraybuffer',
+      headers: {
+       "x-use-cache": false,
+       "Authorization": "Bearer "+keys.HF_API_KEY
+      }
+    })
+    let ans = new MessageMedia
+    ans.mimetype = "image/jpeg"
+    ans.data = Buffer.from(res.data, 'binary').toString('base64')
+    msg.reply(ans)
+  } catch (err) {
+    console.log(err)
+    if (err.toString().includes("503")) {
+      if (!attempt) msg.react("⏳")
+      attempt++
+      if (attempt < 10) setTimeout(async () => pixel(query, msg, attempt), 60000)
       else msg.reply(errReply(giveup))
       return
     }
