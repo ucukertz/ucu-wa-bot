@@ -40,7 +40,7 @@ client.on('message', async msg => {
       "*!hai* HuggingChat\n" +
       "*!cai* ChatGPT\n" +
       "*!img* Stable Diffusion XL\n" +
-      "*!i.sd* Stable Diffusion\n" +
+      "*!i.std* Stable Diffusion\n" +
       "*!i.some* Something v2\n" +
       "*!i.cntr* Counterfeit\n" +
       "*!i.modi* Modern Disney\n" +
@@ -71,8 +71,8 @@ client.on('message', async msg => {
       query = msg.body.replace("!img ", "")
       sdxl(query, msg)
     }
-    else if (msg.body.startsWith("!i.sd ")){
-      query = msg.body.replace("!i.sd ", "")
+    else if (msg.body.startsWith("!i.std ")){
+      query = msg.body.replace("!i.std ", "")
       stable(query, msg)
     }
     else if (msg.body.startsWith("!i.some ")){
@@ -136,7 +136,7 @@ function what(query, msg) {
     case "hai": msg.reply("HuggingChat, ask anything. Uses OpenAssistant as model backend. Open source ChatGPT competitor."); break;
     case "cai": msg.reply("ChatGPT GPT3.5-turbo, ask anything. Capable of receiving large input but have 2021 training cutoff."); break;
     case "img": msg.reply("Stable Diffusion XL text-to-image. Massive breakthrough compared to earlier versions of SD."); break;
-    case "i.sd": msg.reply("Stable Diffusion V2.1 text-to-image."); break;
+    case "i.std": msg.reply("Stable Diffusion V2.1 text-to-image."); break;
     case "i.some": msg.reply("[SD] Something V2.2 text-to-image. Cutesy anime-style."); break;
     case "i.cntr": msg.reply("[SD] Counterfeit V2.5 text-to-image. Eerie(?) anime-style."); break;
     case "i.modi": msg.reply("[SD] Modern Disney Diffusion text-to-image. Disney-style."); break;
