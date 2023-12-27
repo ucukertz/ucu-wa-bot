@@ -40,6 +40,7 @@ client.on('message', async msg => {
       "*!hai* HuggingChat\n" +
       "*!cai* ChatGPT\n" +
       "*!img* Stable Diffusion XL\n" +
+      "*!imgm* Stable Diffusion XLM\n" +
       "*!i.std* Stable Diffusion\n" +
       "*!i.some* Something v2\n" +
       "*!i.cntr* Counterfeit\n" +
@@ -70,6 +71,10 @@ client.on('message', async msg => {
     else if (msg.body.startsWith("!img ")){
       query = msg.body.replace("!img ", "")
       sdxl(query, msg)
+    }
+    else if (msg.body.startsWith("!imgm ")){
+      query = msg.body.replace("!imgm ", "")
+      sdxlm(query, msg)
     }
     else if (msg.body.startsWith("!i.std ")){
       query = msg.body.replace("!i.std ", "")
@@ -135,14 +140,15 @@ function what(query, msg) {
     case "ai": msg.reply("YouBot GPT4, ask anything. Capable of surfing the web (fresh info) but sometimes sleeps."); break;
     case "hai": msg.reply("HuggingChat, ask anything. Uses OpenAssistant as model backend. Open source ChatGPT competitor."); break;
     case "cai": msg.reply("ChatGPT GPT3.5-turbo, ask anything. Capable of receiving large input but have 2021 training cutoff."); break;
-    case "img": msg.reply("Stable Diffusion XL text-to-image. Massive breakthrough compared to earlier versions of SD."); break;
-    case "i.std": msg.reply("Stable Diffusion V2.1 text-to-image."); break;
-    case "i.some": msg.reply("[SD] Something V2.2 text-to-image. Cutesy anime-style."); break;
-    case "i.cntr": msg.reply("[SD] Counterfeit V2.5 text-to-image. Eerie(?) anime-style."); break;
-    case "i.modi": msg.reply("[SD] Modern Disney Diffusion text-to-image. Disney-style."); break;
-    case "i.prot": msg.reply("[SD] Protogen x3.4 text-to-image. Tuned for photorealism."); break;
-    case "i.pix": msg.reply("[SDXL] Pixel Art LoRa text-to-image"); break;
-    case "i.mid": msg.reply("Open source version of Midjourney V4 text-to-image."); break;
+    case "img": msg.reply("Stable Diffusion XL txt2img. Massive breakthrough compared to earlier versions of SD."); break;
+    case "imgm": msg.reply("Stable Diffusion XL txt2img. More sampling steps compared to !img, slower but much better."); break;
+    case "i.std": msg.reply("Stable Diffusion V2.1 txt2img."); break;
+    case "i.some": msg.reply("[SD] Something V2.2 txt2img. Cutesy anime-style."); break;
+    case "i.cntr": msg.reply("[SD] Counterfeit V2.5 txt2img. Eerie(?) anime-style."); break;
+    case "i.modi": msg.reply("[SD] Modern Disney Diffusion txt2img. Disney-style."); break;
+    case "i.prot": msg.reply("[SD] Protogen x3.4 txt2img. Tuned for photorealism."); break;
+    case "i.pix": msg.reply("[SDXL] Pixel Art LoRa txt2img"); break;
+    case "i.mid": msg.reply("Open source version of Midjourney V4 txt2img."); break;
     case "meme": msg.reply("Generate memes assisted with generative AI."); break;
     case "what": msg.reply("*U wot m8?*"); break;
     default: msg.reply(query + ' (2)\nSend "!menu" for command list'); break;
@@ -256,6 +262,28 @@ async function sdxl(query, msg, attempt = 0) {
       return
     }
     msg.reply(errReply(err)) 
+  }
+}
+
+async function sdxlm(query, msg) {
+  try {
+    query = encodeURI(query)
+    let res = await axios({
+      method: 'GET',
+      url: 'https://modal-labs--stable-diffusion-xl-app.modal.run/infer/' + query,
+      data: {inputs: query+", "+Math.random().toString()},
+      responseType: 'arraybuffer',
+      headers: {
+       "x-use-cache": false,
+       "Authorization": "Bearer "+keys.HF_API_KEY
+      }
+    })
+    let ans = new MessageMedia
+    ans.mimetype = "image/png"
+    ans.data = Buffer.from(res.data, 'binary').toString('base64')
+    msg.reply(ans)
+  } catch(err) {
+    msg.reply(errReply(err))
   }
 }
 
