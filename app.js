@@ -47,6 +47,7 @@ client.on('message', async msg => {
       "*!i.modi* Modern Disney\n" +
       "*!i.prot* Protogen\n" +
       "*!i.pix* PixelArt\n" +
+      "*!i.logo* LogoRedmond\n" +
       "*!i.mid* OpenMidjourney\n" +
       "*!meme* Memegen\n" +
       "*!what* More explanation for above commands (ex: '!what ai')\n" +
@@ -246,7 +247,7 @@ async function sdxl(query, msg, attempt = 0) {
     let res = await axios({
       method: 'post',
       url: 'https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0',
-      data: {inputs: query+", "+Math.random().toString()},
+      data: {inputs: query+", " + Math.random().toString()},
       responseType: 'arraybuffer',
       headers: {
        "x-use-cache": false,
@@ -276,7 +277,7 @@ async function sdxlm(query, msg) {
     let res = await axios({
       method: 'GET',
       url: 'https://modal-labs--stable-diffusion-xl-app.modal.run/infer/' + query,
-      data: {inputs: query+", "+Math.random().toString()},
+      data: {inputs: query+", " + Math.random().toString()},
       responseType: 'arraybuffer',
       headers: {
        "x-use-cache": false,
@@ -297,7 +298,7 @@ async function stable(query, msg, attempt = 0) {
     let res = await axios({
       method: 'post',
       url: 'https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1',
-      data: {inputs: query+", "+Math.random().toString()},
+      data: {inputs: query+", " + Math.random().toString()},
       responseType: 'arraybuffer',
       headers: {
        "x-use-cache": false,
@@ -326,7 +327,7 @@ async function something(query, msg, attempt = 0) {
     let res = await axios({
       method: 'post',
       url: 'https://api-inference.huggingface.co/models/NoCrypt/SomethingV2_2',
-      data: {inputs: query+", masterpiece, best quality, ultra-detailed, "+Math.random().toString()},
+      data: {inputs: query+", masterpiece, best quality, ultra-detailed, " + Math.random().toString()},
       responseType: 'arraybuffer',
       headers: {
         "x-use-cache": false,
@@ -357,7 +358,7 @@ async function counterfeit(query, msg, attempt = 0) {
     let res = await axios({
       method: 'post',
       url: 'https://api-inference.huggingface.co/models/gsdf/Counterfeit-V2.5',
-      data: {inputs: query+", masterpiece, best quality, ultra-detailed, "+Math.random().toString()},
+      data: {inputs: query+", masterpiece, best quality, ultra-detailed, " + Math.random().toString()},
       responseType: 'arraybuffer',
       headers: {
         "x-use-cache": false,
@@ -388,7 +389,7 @@ async function moderndisney(query, msg, attempt = 0) {
     let res = await axios({
       method: 'post',
       url: 'https://api-inference.huggingface.co/models/nitrosocke/mo-di-diffusion',
-      data: {inputs: query+", modern disney style, "+Math.random().toString()},
+      data: {inputs: query+", modern disney style, " + Math.random().toString()},
       responseType: 'arraybuffer',
       headers: {
         "x-use-cache": false,
@@ -419,7 +420,7 @@ async function protogen(query, msg, attempt = 0) {
     let res = await axios({
       method: 'post',
       url: 'https://api-inference.huggingface.co/models/darkstorm2150/Protogen_x3.4_Official_Release',
-      data: {inputs: query+", modelshoot style, analog style, mdjrny-v4 style, "+Math.random().toString()},
+      data: {inputs: query+", modelshoot style, analog style, mdjrny-v4 style, " + Math.random().toString()},
       responseType: 'arraybuffer',
       headers: {
         "x-use-cache": false,
@@ -450,7 +451,7 @@ async function pixel(query, msg, attempt = 0) {
     let res = await axios({
       method: 'post',
       url: 'https://api-inference.huggingface.co/models/nerijs/pixel-art-xl',
-      data: {inputs: query+", "+Math.random().toString()},
+      data: {inputs: query+", " + Math.random().toString()},
       responseType: 'arraybuffer',
       headers: {
        "x-use-cache": false,
@@ -479,7 +480,7 @@ async function midjourney(query, msg, attempt = 0) {
     let res = await axios({
       method: 'post',
       url: 'https://api-inference.huggingface.co/models/prompthero/openjourney',
-      data: {inputs: query+", mdjrny-v4 style, "+Math.random().toString()},
+      data: {inputs: query+", mdjrny-v4 style, " + Math.random().toString()},
       responseType: 'arraybuffer',
       headers: {
         "x-use-cache": false,
@@ -510,7 +511,7 @@ async function logo(query, msg, attempt = 0) {
     let res = await axios({
       method: 'post',
       url: 'https://api-inference.huggingface.co/models/artificialguybr/LogoRedmond-LogoLoraForSDXL-V2',
-      data: {inputs: "LogoRedmAF," + query},
+      data: {inputs: "LogoRedmAF, " + query + ", " + Math.random().toString()},
       responseType: 'arraybuffer',
       headers: {
         "x-use-cache": false,
