@@ -100,6 +100,10 @@ client.on('message', async msg => {
       query = msg.body.replace("!i.pix ", "")
       pixel(query, msg)
     }
+    else if (msg.body.startsWith("!i.logo ")){
+      query = msg.body.replace("!i.logo ", "")
+      logo(query, msg)
+    }
     else if (msg.body.startsWith("!i.mid ")){
       query = msg.body.replace("!i.mid ", "")
       midjourney(query, msg)
@@ -148,6 +152,7 @@ function what(query, msg) {
     case "i.modi": msg.reply("[SD] Modern Disney Diffusion txt2img. Disney-style."); break;
     case "i.prot": msg.reply("[SD] Protogen x3.4 txt2img. Tuned for photorealism."); break;
     case "i.pix": msg.reply("[SDXL] Pixel Art LoRa txt2img"); break;
+    case "i.logo": msg.reply("[SDXL] Logo Redmond. Specializes in creating logo images."); break;
     case "i.mid": msg.reply("Open source version of Midjourney V4 txt2img."); break;
     case "meme": msg.reply("Generate memes assisted with generative AI."); break;
     case "what": msg.reply("*U wot m8?*"); break;
@@ -475,6 +480,37 @@ async function midjourney(query, msg, attempt = 0) {
       method: 'post',
       url: 'https://api-inference.huggingface.co/models/prompthero/openjourney',
       data: {inputs: query+", mdjrny-v4 style, "+Math.random().toString()},
+      responseType: 'arraybuffer',
+      headers: {
+        "x-use-cache": false,
+        "Authorization": "Bearer "+keys.HF_API_KEY
+      }
+    })
+    let ans = new MessageMedia
+    ans.mimetype = "image/jpeg"
+    ans.data = Buffer.from(res.data, 'binary').toString('base64')
+    let blacc = (ans.data.match(/KKKKACiiigAooooA/g) || []).length
+    if (blacc < 170) msg.reply(ans)
+    else msg.reply("Black image was received. Saad.\nBlacc: " + blacc.toString())
+  } catch (err) {
+    console.log(err)
+    if (err.toString().includes("503")) {
+      if (!attempt) msg.react("⏳")
+      attempt++
+      if (attempt < 10) setTimeout(async () => something(query, msg, attempt), 60000)
+      else msg.reply(errReply(giveup))
+      return
+    }
+    msg.reply(errReply(err)) 
+  }
+}
+
+async function logo(query, msg, attempt = 0) {
+  try {
+    let res = await axios({
+      method: 'post',
+      url: 'https://api-inference.huggingface.co/models/artificialguybr/LogoRedmond-LogoLoraForSDXL-V2',
+      data: {inputs: "LogoRedmAF," + query},
       responseType: 'arraybuffer',
       headers: {
         "x-use-cache": false,
