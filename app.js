@@ -221,19 +221,19 @@ const ggai = new GoogleGenerativeAI(keys.GOOGLE_API_KEY);
 let gemini_history = []
 async function gemini_pro(query, msg) {
   const model = ggai.getGenerativeModel({model: "gemini-pro"})
-  const chat = model.startChat({
-    history: gemini_history,
-    generationConfig: {
-      maxOutputTokens : 4096
-    }
-  })
-  
   try {
     if (query == "/reset") {
       gemini_history = []
       msg.reply("No thoughts. Head's empty 👍")
       return
     }
+
+    const chat = model.startChat({
+      history: gemini_history,
+      generationConfig: {
+        maxOutputTokens : 4096
+      }
+    })
 
     const result = await chat.sendMessage(query)
     const response = result.response
@@ -249,6 +249,8 @@ async function gemini_pro(query, msg) {
     if (err.toString().includes("SAFETY"))
     err = "Big brother is watching"
 
+    gemini_history = []
+    msg.react("😵")
     msg.reply(errReply(err))
   }
 }
