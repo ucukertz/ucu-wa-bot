@@ -1,11 +1,11 @@
 import wajs from 'whatsapp-web.js'
 const { Client, LocalAuth, MessageMedia } = wajs
-import apis from "./apis.js"
 import keys from "./keys.js"
 import axios from "axios"
 import { Configuration, OpenAIApi } from "openai"
 import qrcode from 'qrcode-terminal'
 import { fileTypeFromBuffer } from 'file-type'
+import { GoogleGenerativeAI } from '@google/generative-ai'
 
 const giveup = "Owari da. The request has fallen. Megabytes must free."
 
@@ -38,6 +38,7 @@ client.on('message', async msg => {
       msg.reply("*Ucukertz WA bot*\n" +
       "*!ai* Youbot\n" +
       "*!cai* ChatGPT\n" +
+      "*!gai* Gemini Pro\n" +
       "*!img* Stable Diffusion XL\n" +
       "*!imgm* Stable Diffusion XLM\n" +
       "*!i.std* Stable Diffusion\n" +
@@ -59,6 +60,10 @@ client.on('message', async msg => {
     else if (msg.body.startsWith("!ai ")){
       query = msg.body.replace("!ai ", "")
       youchat(query, msg)
+    }
+    else if (msg.body.startsWith("!gai ")){
+      query = msg.body.replace("!gai ", "")
+      gemini_pro(query, msg)
     }
     else if (msg.body.startsWith("!cai ")){
       query = msg.body.replace("!cai ", "")
@@ -138,7 +143,8 @@ function errReply(err) {
 function what(query, msg) {
   switch (query) {
     case "ai": msg.reply("YouBot GPT4, ask anything. Capable of surfing the web (fresh info) but sometimes sleeps."); break;
-    case "cai": msg.reply("ChatGPT GPT3.5-turbo, ask anything. Capable of receiving large input but have 2021 training cutoff."); break;
+    case "cai": msg.reply("ChatGPT GPT3.5-turbo, ask anything. Large input but have Jan 2022 training cutoff. Doesn't remember convo."); break;
+    case "gai": msg.reply("Gemini Pro, ask anything. Up-to-date info but may refuse to answer."); break;
     case "img": msg.reply("Stable Diffusion XL txt2img. Massive breakthrough compared to earlier versions of SD."); break;
     case "imgm": msg.reply("Stable Diffusion XL txt2img. More sampling steps compared to !img, slower but much better."); break;
     case "i.std": msg.reply("Stable Diffusion V2.1 txt2img."); break;
@@ -207,6 +213,43 @@ async function youchat(query, msg) {
     console.log(err)
     msg.reply(errReply(err))
     youchatBusy = false
+  }
+}
+
+// Google
+const ggai = new GoogleGenerativeAI(keys.GOOGLE_API_KEY);
+let gemini_history = []
+async function gemini_pro(query, msg) {
+  const model = ggai.getGenerativeModel({model: "gemini-pro"})
+  const chat = model.startChat({
+    history: gemini_history,
+    generationConfig: {
+      maxOutputTokens : 4096
+    }
+  })
+  
+  try {
+    if (query == "/reset") {
+      gemini_history = []
+      msg.reply("No thoughts. Head's empty 👍")
+      return
+    }
+
+    const result = await chat.sendMessage(query)
+    const response = result.response
+    const text = response.text()
+    msg.reply(text)
+
+    if (gemini_history.length > 30) {
+      gemini_history = []
+      msg.react("😵")
+    }
+  } catch (err) {
+    console.log(err)
+    if (err.toString().includes("SAFETY"))
+    err = "Big brother is watching"
+
+    msg.reply(errReply(err))
   }
 }
 
@@ -522,7 +565,7 @@ function fkr_hehe(msg) {
       hehe_curse = true
       curse = setTimeout(() => {
         hehe_curse = false
-      }, 60000*60*24*5)
+      }, 60000*60*24*7)
     }
     if (msg.author.includes(fkr) && hehe_curse) {
       let dr_sec = Math.random()*120
