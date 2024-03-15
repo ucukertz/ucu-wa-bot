@@ -247,10 +247,14 @@ async function gemini_pro(query, msg) {
   } catch (err) {
     console.log(err)
     if (err.toString().includes("SAFETY"))
-    err = "Big brother is watching"
+    err = "Big brother is watching 👁️"
+    else if (err.toString().includes("RECITATION"))
+    err = "Attempt to plagiarize foiled ☹️"
+    else if (err.toString().includes("one part"))
+    err = "Bot breaking apart 😵"
+    else msg.react("😵")
 
     gemini_history = []
-    msg.react("😵")
     msg.reply(errReply(err))
   }
 }
