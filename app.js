@@ -37,7 +37,6 @@ client.on('message', async msg => {
     else if (msg.body.startsWith("!menu")) {
       msg.reply("*Ucukertz WA bot*\n" +
       "*!ai* Youbot\n" +
-      "*!hai* HuggingChat\n" +
       "*!cai* ChatGPT\n" +
       "*!img* Stable Diffusion XL\n" +
       "*!imgm* Stable Diffusion XLM\n" +
@@ -60,10 +59,6 @@ client.on('message', async msg => {
     else if (msg.body.startsWith("!ai ")){
       query = msg.body.replace("!ai ", "")
       youchat(query, msg)
-    }
-    else if (msg.body.startsWith("!hai ")){
-      query = msg.body.replace("!hai ", "")
-      huggingchat(query, msg)
     }
     else if (msg.body.startsWith("!cai ")){
       query = msg.body.replace("!cai ", "")
@@ -143,7 +138,6 @@ function errReply(err) {
 function what(query, msg) {
   switch (query) {
     case "ai": msg.reply("YouBot GPT4, ask anything. Capable of surfing the web (fresh info) but sometimes sleeps."); break;
-    case "hai": msg.reply("HuggingChat, ask anything. Uses OpenAssistant as model backend. Open source ChatGPT competitor."); break;
     case "cai": msg.reply("ChatGPT GPT3.5-turbo, ask anything. Capable of receiving large input but have 2021 training cutoff."); break;
     case "img": msg.reply("Stable Diffusion XL txt2img. Massive breakthrough compared to earlier versions of SD."); break;
     case "imgm": msg.reply("Stable Diffusion XL txt2img. More sampling steps compared to !img, slower but much better."); break;
@@ -215,30 +209,6 @@ async function youchat(query, msg) {
     youchatBusy = false
   }
 }
-
-// HuggingChat
-
-async function huggingchat(query, msg, attempt = 0) {
-  try {
-    let res = await axios({
-      method: 'get',
-      url: apis.HUGGING_CHAT_HOST+"/",
-      data: query,
-    })
-    msg.reply(res.data)
-  } catch (err) {
-    console.log(err)
-    if (err.toString().includes("500")) {
-      if (!attempt) msg.react("⏳")
-      attempt++
-      if (attempt < 5) setTimeout(async () => huggingchat(query, msg, attempt), 10000)
-      else msg.reply(errReply(err))
-      return
-    }
-    msg.reply(errReply(err)) 
-  }
-}
-
 
 // Huggingface
 
