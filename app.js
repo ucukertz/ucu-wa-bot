@@ -5,7 +5,7 @@ import axios from "axios"
 import { Configuration, OpenAIApi } from "openai"
 import qrcode from 'qrcode-terminal'
 import { fileTypeFromBuffer } from 'file-type'
-import { GoogleGenerativeAI } from '@google/generative-ai'
+import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from '@google/generative-ai'
 
 const giveup = "Owari da. The request has fallen. Megabytes must free."
 
@@ -221,6 +221,25 @@ const ggai = new GoogleGenerativeAI(keys.GOOGLE_API_KEY);
 let gemini_history = []
 async function gemini_pro(query, msg) {
   const model = ggai.getGenerativeModel({model: "gemini-pro"})
+  model.safetySettings = [
+    {
+      category: HarmCategory.HARM_CATEGORY_HATE_SPEECH, 
+      threshold: HarmBlockThreshold.BLOCK_NONE
+    },
+    {
+      category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT, 
+      threshold: HarmBlockThreshold.BLOCK_NONE
+    },
+    {
+      category: HarmCategory.HARM_CATEGORY_HARASSMENT, 
+      threshold: HarmBlockThreshold.BLOCK_NONE
+    },
+    {
+      category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT, 
+      threshold: HarmBlockThreshold.BLOCK_NONE
+    },
+  ]
+  
   try {
     if (query == "/reset") {
       gemini_history = []
@@ -251,7 +270,7 @@ async function gemini_pro(query, msg) {
     else if (err.toString().includes("RECITATION"))
     err = "Attempt to plagiarize foiled ☹️"
     else if (err.toString().includes("one part"))
-    err = "Bot breaking apart 😵"
+    err = "Bot breaking apart 🫠"
     else msg.react("😵")
 
     gemini_history = []
@@ -295,8 +314,10 @@ async function sdxlm(query, msg) {
     query = encodeURI(query)
     let res = await axios({
       method: 'GET',
-      url: 'https://modal-labs--stable-diffusion-xl-app.modal.run/infer/' + query,
-      data: {inputs: query+", " + Math.random().toString()},
+      url: 'https://modal-labs--stable-diffusion-xl-model-inference.modal.run?prompt=' + query,
+      data: {
+        prompt: query,
+      },
       responseType: 'arraybuffer',
       headers: {
        "x-use-cache": false,
@@ -304,7 +325,7 @@ async function sdxlm(query, msg) {
       }
     })
     let ans = new MessageMedia
-    ans.mimetype = "image/png"
+    ans.mimetype = "image/jpeg"
     ans.data = Buffer.from(res.data, 'binary').toString('base64')
     msg.reply(ans)
   } catch(err) {
