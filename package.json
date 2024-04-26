@@ -6,7 +6,7 @@
     "file-type": "^18.5.0",
     "openai": "^3.2.1",
     "qrcode-terminal": "^0.12.0",
-    "whatsapp-web.js": "^1.22.1"
+    "whatsapp-web.js": "github:pedroslopez/whatsapp-web.js#webpack-exodus"
   },
   "type": "module",
   "exports": "./app.js"
