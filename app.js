@@ -113,6 +113,9 @@ client.on('message', async msg => {
       query = msg.body.replace("!meme ", "")
       meme(msg, query)
     }
+    else if (msg.body.startsWith("!jail")){
+      jail_hatsudo(jail_msg)
+    }
 
     // Always
     if (msg.body.includes("📚") && msg.body.includes("Sources"))
@@ -128,7 +131,7 @@ client.on('message', async msg => {
       }
     }
 
-    fkr_hehe(msg)
+    hehe(msg)
 
     // Gacha
     tokke(msg)
@@ -140,6 +143,10 @@ function errReply(err) {
   return "Saad. Bot errored --> " + err
 }
 
+/**
+ * @param {string} query 
+ * @param {wajs.Message} msg 
+ */
 function what(query, msg) {
   switch (query) {
     case "ai": msg.reply("YouBot GPT4, ask anything. Capable of surfing the web (fresh info) but sometimes sleeps."); break;
@@ -168,6 +175,10 @@ const configuration = new Configuration({
 })
 const openai = new OpenAIApi(configuration)
 
+/**
+ * @param {string} query 
+ * @param {wajs.Message} msg 
+ */
 async function gpt35(query, msg) {
   try {
     let res = await openai.createChatCompletion({
@@ -191,6 +202,11 @@ let youchatId = ""
 let youchatMsg = ""
 let youchatQuery = ""
 let youchatBusy = false
+
+/**
+ * @param {string} query 
+ * @param {wajs.Message} msg 
+ */
 async function youchat(query, msg) {
   if (!query) {
     query = youchatQuery
@@ -219,6 +235,11 @@ async function youchat(query, msg) {
 // Google
 const ggai = new GoogleGenerativeAI(keys.GOOGLE_API_KEY);
 let gemini_history = []
+
+/**
+ * @param {string} query 
+ * @param {wajs.Message} msg 
+ */
 async function gemini_pro(query, msg) {
   const model = ggai.getGenerativeModel({model: "gemini-pro"})
   model.safetySettings = [
@@ -280,6 +301,11 @@ async function gemini_pro(query, msg) {
 
 // Huggingface
 
+/**
+ * @param {string} query 
+ * @param {wajs.Message} msg 
+ * @param {Number} attempt
+ */
 async function sdxl(query, msg, attempt = 0) {
   try {
     let res = await axios({
@@ -309,6 +335,10 @@ async function sdxl(query, msg, attempt = 0) {
   }
 }
 
+/**
+ * @param {string} query 
+ * @param {wajs.Message} msg 
+ */
 async function sdxlm(query, msg) {
   try {
     query = encodeURI(query)
@@ -333,6 +363,11 @@ async function sdxlm(query, msg) {
   }
 }
 
+/**
+ * @param {string} query 
+ * @param {wajs.Message} msg 
+ * @param {Number} attempt
+ */
 async function stable(query, msg, attempt = 0) {
   try {
     let res = await axios({
@@ -362,6 +397,11 @@ async function stable(query, msg, attempt = 0) {
   }
 }
 
+/**
+ * @param {string} query 
+ * @param {wajs.Message} msg 
+ * @param {Number} attempt
+ */
 async function something(query, msg, attempt = 0) {
   try {
     let res = await axios({
@@ -393,6 +433,11 @@ async function something(query, msg, attempt = 0) {
   }
 }
 
+/**
+ * @param {string} query 
+ * @param {wajs.Message} msg 
+ * @param {Number} attempt
+ */
 async function counterfeit(query, msg, attempt = 0) {
   try {
     let res = await axios({
@@ -424,6 +469,11 @@ async function counterfeit(query, msg, attempt = 0) {
   }
 }
 
+/**
+ * @param {string} query 
+ * @param {wajs.Message} msg 
+ * @param {Number} attempt
+ */
 async function moderndisney(query, msg, attempt = 0) {
   try {
     let res = await axios({
@@ -455,6 +505,11 @@ async function moderndisney(query, msg, attempt = 0) {
   }
 }
 
+/**
+ * @param {string} query 
+ * @param {wajs.Message} msg 
+ * @param {Number} attempt
+ */
 async function protogen(query, msg, attempt = 0) {
   try {
     let res = await axios({
@@ -486,6 +541,11 @@ async function protogen(query, msg, attempt = 0) {
   }
 }
 
+/**
+ * @param {string} query 
+ * @param {wajs.Message} msg 
+ * @param {Number} attempt
+ */
 async function pixel(query, msg, attempt = 0) {
   try {
     let res = await axios({
@@ -515,6 +575,11 @@ async function pixel(query, msg, attempt = 0) {
   }
 }
 
+/**
+ * @param {string} query 
+ * @param {wajs.Message} msg 
+ * @param {Number} attempt
+ */
 async function midjourney(query, msg, attempt = 0) {
   try {
     let res = await axios({
@@ -546,6 +611,11 @@ async function midjourney(query, msg, attempt = 0) {
   }
 }
 
+/**
+ * @param {string} query 
+ * @param {wajs.Message} msg 
+ * @param {Number} attempt
+ */
 async function logo(query, msg, attempt = 0) {
   try {
     let res = await axios({
@@ -577,34 +647,10 @@ async function logo(query, msg, attempt = 0) {
   }
 }
 
-// Always
-
-let fkr = "7102"
-let hehe_curse = false
-let curse
-function fkr_hehe(msg) {
-  if (!msg.author) return
-  try {
-    const regex = /h\s*e\s*h\s*e\s*/i
-    if (msg.author.includes(fkr) && regex.test(msg.body)) {
-      msg.reply("h3h3 or heehee 👿")
-      if (hehe_curse) clearTimeout(curse)
-      hehe_curse = true
-      curse = setTimeout(() => {
-        hehe_curse = false
-      }, 60000*60*24*7)
-    }
-    if (msg.author.includes(fkr) && hehe_curse) {
-      let dr_sec = Math.random()*120
-      setTimeout(() => {
-        msg.react("😡")
-      }, dr_sec*1000)
-    }
-  } catch (err) {
-    console.log(err)
-  }
-}
-
+/**
+ * @param {string} query 
+ * @param {wajs.Message} msg 
+ */
 async function meme(msg, query) {
   try {
     let memereq = {
@@ -634,51 +680,131 @@ async function meme(msg, query) {
   }
 }
 
+// Always
+
+let inmate = "7102"
+let jail_is_hatsudo = false
+let jail = false
+let jail_msg
+
+/**
+ * @param {wajs.Message} msg 
+ */
+function jail_hatsudo(msg) {
+  msg.reply("h3h3 or heehee 👿")
+  if (jail_is_hatsudo) clearTimeout(jail)
+  jail_is_hatsudo = true
+  jail = setTimeout(() => {
+    jail_is_hatsudo = false
+  }, 60000*60*24*7)
+}
+
+/**
+ * @param {wajs.Message} msg 
+ */
+async function hehe(msg) {
+  function hehe_chk(str) {
+    const regex = /h\s*e\s*h\s*e\s*/i
+    return regex.test(str)
+  }
+
+  if (!msg.author || !msg.author.includes(inmate)) return
+  jail_msg = msg
+  try {
+    if (msg.body) {
+      if (hehe_chk(msg.body)) {
+        jail_hatsudo(msg)
+      }
+    }
+    if (msg.type == wajs.MessageTypes.IMAGE) {
+      let mm = await msg.downloadMedia()
+      console.log("MM", mm.mimetype)
+    }
+    else if (msg.type == wajs.MessageTypes.STICKER) {
+      let mm = await msg.downloadMedia()
+      console.log("MMS", mm.mimetype)
+    }
+    else if (msg.isGif) {
+      let mm = await msg.downloadMedia()
+      console.log("MMG", mm.mimetype)
+    }
+
+    if (jail_is_hatsudo) {
+      let dr_sec = Math.random()*120
+      setTimeout(() => {
+        msg.react("😡")
+      }, dr_sec*1000)
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 // Gacha
 
+/**
+ * @param {wajs.Message} msg 
+ * @returns 
+ */
 async function tokke(msg) {
   if (Math.random() > 0.02) return
-  let aians = "none"
+  let aians_err = false
+  let aians = "ans"
+  let aians_cut = "cut"
   try {
     if (msg.body == "") msg.body = getRandThing()
     let query = msg.body
-    let aires = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo",
-      messages: [{role: "system", content: "Respond to user messages with two sentences at most." +
-                                           "Be as memey as possible."}, 
-      {role: "user", content: query}],
-      temperature: 1.5,
-      max_tokens: 2000,
-      frequency_penalty: 2,
-      presence_penalty: 0.0,
-    })
-    aians = aires.data.choices[0].message.content
 
-    if (aians.length > 100)
-    aians = aians.split(/\s+/).slice(0, 2).join(" ")
-    
+    try {
+      let aires = await openai.createChatCompletion({
+        model: "gpt-3.5-turbo",
+        messages: [{role: "system", content: "Respond to user messages with two sentences at most." +
+                                             "Be as memey as possible."}, 
+        {role: "user", content: query}],
+        temperature: 1.5,
+        max_tokens: 2000,
+        frequency_penalty: 2,
+        presence_penalty: 0.0,
+      })
+      aians = aires.data.choices[0].message.content
+    } catch (err) {
+      aians_err = true
+    }
+
+    if (aians_err) aians = getRandThing()
+    if (aians.length > 100) {
+      aians_cut = aians.split(/\s+/).slice(0, 2).join(" ")
+      console.log("AIANS", aians, "AIANSCUT", aians_cut)
+    }
+    else aians_cut = aians
+
     let memereq = {
-      "text" : aians,
+      "text" : aians_cut,
       "safe": true,
       "redirect": true
     }
 
-    let memeres = await axios({
-      method: 'post',
-      url: "https://api.memegen.link/images/automatic",
-      data: JSON.stringify(memereq),
-      responseType: 'arraybuffer',
-    })
-    let mime = await fileTypeFromBuffer(Buffer.from(memeres.data, 'binary'))
-
-    let ans = new MessageMedia
-    ans.data = Buffer.from(memeres.data, 'binary').toString('base64')
-    ans.mimetype = mime.mime
-
-    msg.reply(ans)
+    try {
+      let memeres = await axios({
+        method: 'post',
+        url: "https://api.memegen.link/images/automatic",
+        data: JSON.stringify(memereq),
+        responseType: 'arraybuffer',
+      })
+      let mime = await fileTypeFromBuffer(Buffer.from(memeres.data, 'binary'))
+  
+      let ans = new MessageMedia
+      ans.data = Buffer.from(memeres.data, 'binary').toString('base64')
+      ans.mimetype = mime.mime
+  
+      msg.reply(ans)
+    } catch (err) {
+      if (!aians_err) msg.reply(aians)
+      else msg.react("😮")
+    }
   } catch (err) {
     if (err.toString().includes("400")) {
-      msg.reply(errReply(`Bad meem: ${aians}`))
+      msg.reply(errReply(`Bad meem: ${aians_cut}`))
     }
     else msg.reply(errReply(err))
   }
@@ -686,6 +812,11 @@ async function tokke(msg) {
 
 // Utils
 
+/**
+ * @param {Number} min 
+ * @param {Number} max 
+ * @returns 
+ */
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
