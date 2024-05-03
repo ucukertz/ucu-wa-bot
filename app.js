@@ -67,7 +67,7 @@ client.on('message', async msg => {
     }
     else if (msg.body.startsWith("!cai ")){
       query = msg.body.replace("!cai ", "")
-      gpt35(query, msg)
+      gpt4(query, msg)
     }
     else if (msg.body.startsWith("!img ")){
       query = msg.body.replace("!img ", "")
@@ -175,15 +175,50 @@ const configuration = new Configuration({
 })
 const openai = new OpenAIApi(configuration)
 
+const oai_play_default = "You are a helpful AI assistant" 
+
+/**
+ * @param {string} play
+ * @param {string} q1st first user query 
+ * @returns 
+ */
+function oai_new_chat(play, q1st)
+{
+  return [
+    {role: "system", content: play ? play : oai_play_default},
+    {role: "user", content: q1st}
+  ]
+}
+
+function oai_new_chat_default()
+{
+  return oai_new_chat("", "Hi")
+}
+
+let gpt4_chat = []
 /**
  * @param {string} query 
  * @param {wajs.Message} msg 
  */
-async function gpt35(query, msg) {
+async function gpt4(query, msg) {
+  let is_sys = false
+  if (query.startsWith("/play")) {
+    query = query.replace("/play ", "")
+    gpt4_chat = oai_new_chat(query, "Demonstrate your undertanding of the instruction")
+    is_sys = true
+  }
+
   try {
+    if (query == "/reset") {
+      gpt4_chat = oai_new_chat_default()
+      msg.reply("No thoughts. Head's empty 👍")
+      return
+    }
+    if (!is_sys) gpt4_chat.push({role: "user", content: query})
+
     let res = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo",
-      messages: [{role: "user", content: query}],
+      model: "gpt-4-turbo",
+      messages: gpt4_chat,
       temperature: 0.5,
       max_tokens: 2000,
       frequency_penalty: 2,
@@ -191,6 +226,12 @@ async function gpt35(query, msg) {
     })
     let ans = res.data.choices[0].message.content
     msg.reply(ans)
+
+    gpt4_chat.push({role: "assistant", content: ans})
+    if (gpt4_chat.length > 30) {
+      gpt4_chat = oai_new_chat_default()
+      msg.react("😵")
+    }
   } catch (err) {
     msg.reply(errReply(err))
   }
