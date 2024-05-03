@@ -150,7 +150,7 @@ function errReply(err) {
 function what(query, msg) {
   switch (query) {
     case "ai": msg.reply("YouBot GPT4, ask anything. Capable of surfing the web (fresh info) but sometimes sleeps."); break;
-    case "cai": msg.reply("ChatGPT GPT3.5-turbo, ask anything. Large input but have Jan 2022 training cutoff. Doesn't remember convo."); break;
+    case "cai": msg.reply("ChatGPT GPT4-turbo, ask anything. Dec 2023 training cutoff. Start prompt with /play to make it roleplay."); break;
     case "gai": msg.reply("Gemini Pro, ask anything. Up-to-date info but may refuse to answer."); break;
     case "img": msg.reply("Stable Diffusion XL txt2img. Massive breakthrough compared to earlier versions of SD."); break;
     case "imgm": msg.reply("Stable Diffusion XL txt2img. More sampling steps compared to !img, slower but much better."); break;
