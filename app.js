@@ -344,7 +344,7 @@ async function sdxlm(query, msg) {
     query = encodeURI(query)
     let res = await axios({
       method: 'GET',
-      url: 'https://modal-labs--stable-diffusion-xl-model-inference.modal.run?prompt=' + query,
+      url: 'https://modal-labs--stable-diffusion-xl-model-web-inference.modal.run?prompt=' + query,
       data: {
         prompt: query,
       },
