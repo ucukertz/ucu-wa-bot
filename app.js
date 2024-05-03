@@ -202,9 +202,9 @@ let gpt4_chat = []
  */
 async function gpt4(query, msg) {
   let is_sys = false
-  if (query.startsWith("/play")) {
+  if (query.startsWith("/play ")) {
     query = query.replace("/play ", "")
-    gpt4_chat = oai_new_chat(query, "Demonstrate your undertanding of the instruction")
+    gpt4_chat = oai_new_chat(query, "Demonstrate your understanding of the instruction")
     is_sys = true
   }
 
