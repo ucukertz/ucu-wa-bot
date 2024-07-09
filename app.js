@@ -141,14 +141,17 @@ function saad(err) {
  */
 function menu(msg) {
   try {
-  msg.reply("*Ucukertz WA bot*\n" +
-    "*!ai* Youbot\n" +
-    "*!cai* ChatGPT\n" +
-    "*!gai* Gemini Pro\n" +
-    "*!img* Stable Diffusion XL\n" +
-    "*!imgm* Advanced image gen menu\n" +
-    "*!meme* Memegen\n" +
-    "*!what* More explanation for above commands (ex: '!what ai')\n")
+  let reply = nljoin(
+    "*Ucukertz WA bot*",
+    "*!ai* Youbot",
+    "*!cai* ChatGPT",
+    "*!gai* Gemini Pro",
+    "*!img* Stable Diffusion XL",
+    "*!imgm* Advanced image gen menu",
+    "*!meme* Memegen",
+    "*!what* More explanation for above commands (ex: '!what ai')"
+  )
+  msg.reply(reply)
   } catch (err) {
     console.log("fetching menu", err)
   }
@@ -159,15 +162,18 @@ function menu(msg) {
  */
 function imenu(msg) {
   try {
-    msg.reply("*Advanced image generation*\n" +
-      "*!i.std* Stable Diffusion\n" +
-      "*!i.some* Something v2\n" +
-      "*!i.cntr* Counterfeit\n" +
-      "*!i.modi* Modern Disney\n" +
-      "*!i.prot* Protogen\n" +
-      "*!i.pix* PixelArt\n" +
-      "*!i.logo* LogoRedmond\n" +
-      "*!i.mid* OpenMidjourney\n")
+    let reply = nljoin(
+      "*Advanced image gen menu*",
+      "*!i.std* Stable Diffusion",
+      "*!i.some* Something v2",
+      "*!i.cntr* Counterfeit",
+      "*!i.modi* Modern Disney",
+      "*!i.prot* Protogen",
+      "*!i.pix* PixelArt",
+      "*!i.logo* LogoRedmond",
+      "*!i.mid* OpenMidjourney"
+    )
+    msg.reply(reply)
   } catch (err) {
     console.log("fetching imenu", err)
   }
@@ -857,6 +863,15 @@ async function tokke(msg) {
 }
 
 // Utils
+
+/**
+ * @param {string} string1 
+ * @param  {...string} otherStrings 
+ * @returns 
+ */
+function nljoin(string1, ...otherStrings) {
+  return `${string1}\n${otherStrings.join('\n')}`;
+}
 
 /**
  * @param {Number} min 
