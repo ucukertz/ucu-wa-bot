@@ -30,17 +30,136 @@ client.on('ready', () => {
 
 client.on('message', async msg => {
     let query
-    // Bots
-    if (msg.body.startsWith("!ping")) {
-      msg.reply('pong');
+    try {
+      // Bots
+      if (msg.body.startsWith("!ping")) {
+        msg.reply('pong');
+      }
+      else if (msg.body.startsWith("!menu")) {
+        menu(msg)
+      }
+      else if (msg.body.startsWith("!imgm")) {
+        imenu(msg)
+      }
+      else if (msg.body.startsWith("!what")) {
+        query = msg.body.replace("!what ", "")
+        what(query, msg)
+      }
+      else if (msg.body.startsWith("!ai ")){
+        query = msg.body.replace("!ai ", "")
+        youchat(query, msg)
+      }
+      else if (msg.body.startsWith("!gai ")){
+        query = msg.body.replace("!gai ", "")
+        gemini_pro(query, msg)
+      }
+      else if (msg.body.startsWith("!cai ")){
+        query = msg.body.replace("!cai ", "")
+        gpt4(query, msg)
+      }
+      else if (msg.body.startsWith("!img ")){
+        query = msg.body.replace("!img ", "")
+        sdxl(query, msg)
+      }
+      else if (msg.body.startsWith("!i.std ")){
+        query = msg.body.replace("!i.std ", "")
+        stable(query, msg)
+      }
+      else if (msg.body.startsWith("!i.some ")){
+        query = msg.body.replace("!i.some ", "")
+        something(query, msg)
+      }
+      else if (msg.body.startsWith("!i.cntr ")){
+        query = msg.body.replace("!i.cntr ", "")
+        counterfeit(query, msg)
+      }
+      else if (msg.body.startsWith("!i.modi ")){
+        query = msg.body.replace("!i.modi ", "")
+        moderndisney(query, msg)
+      }
+      else if (msg.body.startsWith("!i.prot ")){
+        query = msg.body.replace("!i.prot ", "")
+        protogen(query, msg)
+      }
+      else if (msg.body.startsWith("!i.pix ")){
+        query = msg.body.replace("!i.pix ", "")
+        pixel(query, msg)
+      }
+      else if (msg.body.startsWith("!i.logo ")){
+        query = msg.body.replace("!i.logo ", "")
+        logo(query, msg)
+      }
+      else if (msg.body.startsWith("!i.mid ")){
+        query = msg.body.replace("!i.mid ", "")
+        midjourney(query, msg)
+      }
+      else if (msg.body.startsWith("!meme ")){
+        query = msg.body.replace("!meme ", "")
+        meme(msg, query)
+      }
+      else if (msg.body.startsWith("!jail")){
+        jail_hatsudo(jail_msg)
+      }
+
+      // Always
+      if (msg.body.includes("📚") && msg.body.includes("Sources"))
+      youchatId = msg.from
+      if (msg.from == youchatId && youchatBusy) {
+        if (!msg.body.includes("great to meet you!")) {
+          youchatMsg.reply(msg.body)
+          youchatBusy = false
+        } else {
+          youchatMsg.react("⏳")
+          youchatBusy = false
+          youchat("", youchatMsg)
+        }
+      }
+    
+      hehe(msg)
+  
+      // Gacha
+      tokke(msg)
+    } catch (err) {
+      console.log("main", query, err)
     }
-    else if (msg.body.startsWith("!menu")) {
-      msg.reply("*Ucukertz WA bot*\n" +
-      "*!ai* Youbot\n" +
-      "*!cai* ChatGPT\n" +
-      "*!gai* Gemini Pro\n" +
-      "*!img* Stable Diffusion XL\n" +
-      "*!imgm* Stable Diffusion XLM\n" +
+})
+
+client.initialize();
+
+/**
+ * @param {string} err 
+ * @returns 
+ */
+function saad(err) {
+  return "Saad. Bot errored --> " + err
+}
+
+// Menu
+
+/**
+ * @param {wajs.Message} msg
+ */
+function menu(msg) {
+  try {
+  msg.reply("*Ucukertz WA bot*\n" +
+    "*!ai* Youbot\n" +
+    "*!cai* ChatGPT\n" +
+    "*!gai* Gemini Pro\n" +
+    "*!img* Stable Diffusion XL\n" +
+    "*!imgm* Advanced image gen menu\n" +
+    "*!meme* Memegen\n" +
+    "*!what* More explanation for above commands (ex: '!what ai')\n")
+  } catch (err) {
+    console.log("fetching menu", err)
+  }
+}
+
+/**
+ * @param {wajs.Message} msg 
+ */
+function imenu(msg) {
+  try {
+    msg.reply("*Advanced image generation*\n" +
       "*!i.std* Stable Diffusion\n" +
       "*!i.some* Something v2\n" +
       "*!i.cntr* Counterfeit\n" +
@@ -48,99 +167,10 @@ client.on('message', async msg => {
       "*!i.prot* Protogen\n" +
       "*!i.pix* PixelArt\n" +
       "*!i.logo* LogoRedmond\n" +
-      "*!i.mid* OpenMidjourney\n" +
-      "*!meme* Memegen\n" +
-      "*!what* More explanation for above commands (ex: '!what ai')\n" +
-      "")
-    }
-    else if (msg.body.startsWith("!what")) {
-      query = msg.body.replace("!what ", "")
-      what(query, msg)
-    }
-    else if (msg.body.startsWith("!ai ")){
-      query = msg.body.replace("!ai ", "")
-      youchat(query, msg)
-    }
-    else if (msg.body.startsWith("!gai ")){
-      query = msg.body.replace("!gai ", "")
-      gemini_pro(query, msg)
-    }
-    else if (msg.body.startsWith("!cai ")){
-      query = msg.body.replace("!cai ", "")
-      gpt4(query, msg)
-    }
-    else if (msg.body.startsWith("!img ")){
-      query = msg.body.replace("!img ", "")
-      sdxl(query, msg)
-    }
-    else if (msg.body.startsWith("!imgm ")){
-      query = msg.body.replace("!imgm ", "")
-      sdxlm(query, msg)
-    }
-    else if (msg.body.startsWith("!i.std ")){
-      query = msg.body.replace("!i.std ", "")
-      stable(query, msg)
-    }
-    else if (msg.body.startsWith("!i.some ")){
-      query = msg.body.replace("!i.some ", "")
-      something(query, msg)
-    }
-    else if (msg.body.startsWith("!i.cntr ")){
-      query = msg.body.replace("!i.cntr ", "")
-      counterfeit(query, msg)
-    }
-    else if (msg.body.startsWith("!i.modi ")){
-      query = msg.body.replace("!i.modi ", "")
-      moderndisney(query, msg)
-    }
-    else if (msg.body.startsWith("!i.prot ")){
-      query = msg.body.replace("!i.prot ", "")
-      protogen(query, msg)
-    }
-    else if (msg.body.startsWith("!i.pix ")){
-      query = msg.body.replace("!i.pix ", "")
-      pixel(query, msg)
-    }
-    else if (msg.body.startsWith("!i.logo ")){
-      query = msg.body.replace("!i.logo ", "")
-      logo(query, msg)
-    }
-    else if (msg.body.startsWith("!i.mid ")){
-      query = msg.body.replace("!i.mid ", "")
-      midjourney(query, msg)
-    }
-    else if (msg.body.startsWith("!meme ")){
-      query = msg.body.replace("!meme ", "")
-      meme(msg, query)
-    }
-    else if (msg.body.startsWith("!jail")){
-      jail_hatsudo(jail_msg)
-    }
-
-    // Always
-    if (msg.body.includes("📚") && msg.body.includes("Sources"))
-    youchatId = msg.from
-    if (msg.from == youchatId && youchatBusy) {
-      if (!msg.body.includes("great to meet you!")) {
-        youchatMsg.reply(msg.body)
-        youchatBusy = false
-      } else {
-        youchatMsg.react("⏳")
-        youchatBusy = false
-        youchat("", youchatMsg)
-      }
-    }
-
-    hehe(msg)
-
-    // Gacha
-    tokke(msg)
-})
-
-client.initialize();
-
-function errReply(err) {
-  return "Saad. Bot errored --> " + err
+      "*!i.mid* OpenMidjourney\n")
+  } catch (err) {
+    console.log("fetching imenu", err)
+  }
 }
 
 /**
@@ -148,23 +178,26 @@ function errReply(err) {
  * @param {wajs.Message} msg 
  */
 function what(query, msg) {
-  switch (query) {
-    case "ai": msg.reply("YouBot GPT4, ask anything. Capable of surfing the web (fresh info) but sometimes sleeps."); break;
-    case "cai": msg.reply("ChatGPT GPT4-turbo, ask anything. Dec 2023 training cutoff. Start prompt with /play to make it roleplay."); break;
-    case "gai": msg.reply("Gemini Pro, ask anything. Up-to-date info but may refuse to answer."); break;
-    case "img": msg.reply("Stable Diffusion XL txt2img. Massive breakthrough compared to earlier versions of SD."); break;
-    case "imgm": msg.reply("Stable Diffusion XL txt2img. More sampling steps compared to !img, slower but much better."); break;
-    case "i.std": msg.reply("Stable Diffusion V2.1 txt2img."); break;
-    case "i.some": msg.reply("[SD] Something V2.2 txt2img. Cutesy anime-style."); break;
-    case "i.cntr": msg.reply("[SD] Counterfeit V2.5 txt2img. Eerie(?) anime-style."); break;
-    case "i.modi": msg.reply("[SD] Modern Disney Diffusion txt2img. Disney-style."); break;
-    case "i.prot": msg.reply("[SD] Protogen x3.4 txt2img. Tuned for photorealism."); break;
-    case "i.pix": msg.reply("[SDXL] Pixel Art LoRa txt2img"); break;
-    case "i.logo": msg.reply("[SDXL] Logo Redmond. Specializes in creating logo images."); break;
-    case "i.mid": msg.reply("Open source version of Midjourney V4 txt2img."); break;
-    case "meme": msg.reply("Generate memes assisted with generative AI."); break;
-    case "what": msg.reply("*U wot m8?*"); break;
-    default: msg.reply(query + ' (2)\nSend "!menu" for command list'); break;
+  try {
+    switch (query) {
+      case "ai": msg.reply("YouBot GPT4, ask anything. Capable of surfing the web (fresh info) but sometimes sleeps."); break;
+      case "cai": msg.reply("ChatGPT GPT4-turbo, ask anything. Dec 2023 training cutoff. Start prompt with /play to make it roleplay."); break;
+      case "gai": msg.reply("Gemini Pro, ask anything. Up-to-date info but may refuse to answer."); break;
+      case "img": msg.reply("Stable Diffusion XL txt2img. Massive breakthrough compared to earlier versions of SD."); break;
+      case "i.std": msg.reply("Stable Diffusion V2.1 txt2img."); break;
+      case "i.some": msg.reply("[SD] Something V2.2 txt2img. Cutesy anime-style."); break;
+      case "i.cntr": msg.reply("[SD] Counterfeit V2.5 txt2img. Eerie(?) anime-style."); break;
+      case "i.modi": msg.reply("[SD] Modern Disney Diffusion txt2img. Disney-style."); break;
+      case "i.prot": msg.reply("[SD] Protogen x3.4 txt2img. Tuned for photorealism."); break;
+      case "i.pix": msg.reply("[SDXL] Pixel Art LoRa txt2img"); break;
+      case "i.logo": msg.reply("[SDXL] Logo Redmond. Specializes in creating logo images."); break;
+      case "i.mid": msg.reply("Open source version of Midjourney V4 txt2img."); break;
+      case "meme": msg.reply("Generate memes assisted with generative AI."); break;
+      case "what": msg.reply("*U wot m8?*"); break;
+      default: msg.reply(query + ' (2)\nSend "!menu" for command list'); break;
+    }
+  } catch (err) {
+    console.log("what", err)
   }
 }
 
@@ -233,7 +266,7 @@ async function gpt4(query, msg) {
       msg.react("😵")
     }
   } catch (err) {
-    msg.reply(errReply(err))
+    msg.reply(saad(err))
   }
 }
 
@@ -254,7 +287,7 @@ async function youchat(query, msg) {
   }
   try {
     if (youchatId == "") {
-      msg.reply(errReply("Youbot is sleeping 💤"))
+      msg.reply(saad("Youbot is sleeping 💤"))
       return
     }
     if (youchatBusy) {
@@ -268,7 +301,7 @@ async function youchat(query, msg) {
     client.sendMessage(youchatId, youchatQuery)
   } catch (err) {
     console.log(err)
-    msg.reply(errReply(err))
+    msg.reply(saad(err))
     youchatBusy = false
   }
 }
@@ -336,7 +369,7 @@ async function gemini_pro(query, msg) {
     else msg.react("😵")
 
     gemini_history = []
-    msg.reply(errReply(err))
+    msg.reply(saad(err))
   }
 }
 
@@ -369,38 +402,10 @@ async function sdxl(query, msg, attempt = 0) {
       if (!attempt) msg.react("⏳")
       attempt++
       if (attempt < 10) setTimeout(async () => sdxl(query, msg, attempt), 60000)
-      else msg.reply(errReply(giveup))
+      else msg.reply(saad(giveup))
       return
     }
-    msg.reply(errReply(err)) 
-  }
-}
-
-/**
- * @param {string} query 
- * @param {wajs.Message} msg 
- */
-async function sdxlm(query, msg) {
-  try {
-    query = encodeURI(query)
-    let res = await axios({
-      method: 'GET',
-      url: 'https://modal-labs--stable-diffusion-xl-model-web-inference.modal.run?prompt=' + query,
-      data: {
-        prompt: query,
-      },
-      responseType: 'arraybuffer',
-      headers: {
-       "x-use-cache": false,
-       "Authorization": "Bearer "+keys.HF_API_KEY
-      }
-    })
-    let ans = new MessageMedia
-    ans.mimetype = "image/jpeg"
-    ans.data = Buffer.from(res.data, 'binary').toString('base64')
-    msg.reply(ans)
-  } catch(err) {
-    msg.reply(errReply(err))
+    msg.reply(saad(err)) 
   }
 }
 
@@ -431,10 +436,10 @@ async function stable(query, msg, attempt = 0) {
       if (!attempt) msg.react("⏳")
       attempt++
       if (attempt < 10) setTimeout(async () => stable(query, msg, attempt), 60000)
-      else msg.reply(errReply(giveup))
+      else msg.reply(saad(giveup))
       return
     }
-    msg.reply(errReply(err)) 
+    msg.reply(saad(err)) 
   }
 }
 
@@ -467,10 +472,10 @@ async function something(query, msg, attempt = 0) {
       if (!attempt) msg.react("⏳")
       attempt++
       if (attempt < 10) setTimeout(async () => something(query, msg, attempt), 60000)
-      else msg.reply(errReply(giveup))
+      else msg.reply(saad(giveup))
       return
     }
-    msg.reply(errReply(err)) 
+    msg.reply(saad(err)) 
   }
 }
 
@@ -503,10 +508,10 @@ async function counterfeit(query, msg, attempt = 0) {
       if (!attempt) msg.react("⏳")
       attempt++
       if (attempt < 10) setTimeout(async () => something(query, msg, attempt), 60000)
-      else msg.reply(errReply(giveup))
+      else msg.reply(saad(giveup))
       return
     }
-    msg.reply(errReply(err)) 
+    msg.reply(saad(err)) 
   }
 }
 
@@ -539,10 +544,10 @@ async function moderndisney(query, msg, attempt = 0) {
       if (!attempt) msg.react("⏳")
       attempt++
       if (attempt < 10) setTimeout(async () => something(query, msg, attempt), 60000)
-      else msg.reply(errReply(giveup))
+      else msg.reply(saad(giveup))
       return
     }
-    msg.reply(errReply(err)) 
+    msg.reply(saad(err)) 
   }
 }
 
@@ -575,10 +580,10 @@ async function protogen(query, msg, attempt = 0) {
       if (!attempt) msg.react("⏳")
       attempt++
       if (attempt < 10) setTimeout(async () => something(query, msg, attempt), 60000)
-      else msg.reply(errReply(giveup))
+      else msg.reply(saad(giveup))
       return
     }
-    msg.reply(errReply(err)) 
+    msg.reply(saad(err)) 
   }
 }
 
@@ -609,10 +614,10 @@ async function pixel(query, msg, attempt = 0) {
       if (!attempt) msg.react("⏳")
       attempt++
       if (attempt < 10) setTimeout(async () => pixel(query, msg, attempt), 60000)
-      else msg.reply(errReply(giveup))
+      else msg.reply(saad(giveup))
       return
     }
-    msg.reply(errReply(err)) 
+    msg.reply(saad(err)) 
   }
 }
 
@@ -645,10 +650,10 @@ async function midjourney(query, msg, attempt = 0) {
       if (!attempt) msg.react("⏳")
       attempt++
       if (attempt < 10) setTimeout(async () => something(query, msg, attempt), 60000)
-      else msg.reply(errReply(giveup))
+      else msg.reply(saad(giveup))
       return
     }
-    msg.reply(errReply(err)) 
+    msg.reply(saad(err)) 
   }
 }
 
@@ -681,10 +686,10 @@ async function logo(query, msg, attempt = 0) {
       if (!attempt) msg.react("⏳")
       attempt++
       if (attempt < 10) setTimeout(async () => something(query, msg, attempt), 60000)
-      else msg.reply(errReply(giveup))
+      else msg.reply(saad(giveup))
       return
     }
-    msg.reply(errReply(err)) 
+    msg.reply(saad(err)) 
   }
 }
 
@@ -715,9 +720,9 @@ async function meme(msg, query) {
     msg.reply(ans)
   } catch (err) {
     if (err.toString().includes("400")) {
-      msg.reply(errReply(`Bad meem: ${query}`))
+      msg.reply(saad(`Bad meem: ${query}`))
     }
-    else msg.reply(errReply(err))
+    else msg.reply(saad(err))
   }
 }
 
@@ -845,9 +850,9 @@ async function tokke(msg) {
     }
   } catch (err) {
     if (err.toString().includes("400")) {
-      msg.reply(errReply(`Bad meem: ${aians_cut}`))
+      msg.reply(saad(`Bad meem: ${aians_cut}`))
     }
-    else msg.reply(errReply(err))
+    else msg.reply(saad(err))
   }
 }
 
