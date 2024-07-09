@@ -29,99 +29,99 @@ client.on('ready', () => {
 })
 
 client.on('message', async msg => {
-    let query
-    try {
-      // Bots
-      if (msg.body.startsWith("!ping")) {
-        msg.reply('pong');
-      }
-      else if (msg.body.startsWith("!menu")) {
-        menu(msg)
-      }
-      else if (msg.body.startsWith("!imgm")) {
-        imenu(msg)
-      }
-      else if (msg.body.startsWith("!what")) {
-        query = msg.body.replace("!what ", "")
-        what(query, msg)
-      }
-      else if (msg.body.startsWith("!ai ")){
-        query = msg.body.replace("!ai ", "")
-        youchat(query, msg)
-      }
-      else if (msg.body.startsWith("!gai ")){
-        query = msg.body.replace("!gai ", "")
-        gemini_pro(query, msg)
-      }
-      else if (msg.body.startsWith("!cai ")){
-        query = msg.body.replace("!cai ", "")
-        gpt4(query, msg)
-      }
-      else if (msg.body.startsWith("!img ")){
-        query = msg.body.replace("!img ", "")
-        sdxl(query, msg)
-      }
-      else if (msg.body.startsWith("!i.std ")){
-        query = msg.body.replace("!i.std ", "")
-        stable(query, msg)
-      }
-      else if (msg.body.startsWith("!i.some ")){
-        query = msg.body.replace("!i.some ", "")
-        something(query, msg)
-      }
-      else if (msg.body.startsWith("!i.cntr ")){
-        query = msg.body.replace("!i.cntr ", "")
-        counterfeit(query, msg)
-      }
-      else if (msg.body.startsWith("!i.modi ")){
-        query = msg.body.replace("!i.modi ", "")
-        moderndisney(query, msg)
-      }
-      else if (msg.body.startsWith("!i.prot ")){
-        query = msg.body.replace("!i.prot ", "")
-        protogen(query, msg)
-      }
-      else if (msg.body.startsWith("!i.pix ")){
-        query = msg.body.replace("!i.pix ", "")
-        pixel(query, msg)
-      }
-      else if (msg.body.startsWith("!i.logo ")){
-        query = msg.body.replace("!i.logo ", "")
-        logo(query, msg)
-      }
-      else if (msg.body.startsWith("!i.mid ")){
-        query = msg.body.replace("!i.mid ", "")
-        midjourney(query, msg)
-      }
-      else if (msg.body.startsWith("!meme ")){
-        query = msg.body.replace("!meme ", "")
-        meme(msg, query)
-      }
-      else if (msg.body.startsWith("!jail")){
-        jail_hatsudo(jail_msg)
-      }
-
-      // Always
-      if (msg.body.includes("📚") && msg.body.includes("Sources"))
-      youchatId = msg.from
-      if (msg.from == youchatId && youchatBusy) {
-        if (!msg.body.includes("great to meet you!")) {
-          youchatMsg.reply(msg.body)
-          youchatBusy = false
-        } else {
-          youchatMsg.react("⏳")
-          youchatBusy = false
-          youchat("", youchatMsg)
-        }
-      }
-    
-      hehe(msg)
-  
-      // Gacha
-      tokke(msg)
-    } catch (err) {
-      console.log("main", query, err)
+  let query
+  try {
+    // Bots
+    if (msg.body.startsWith("!ping")) {
+      msg.reply('pong');
     }
+    else if (msg.body.startsWith("!menu")) {
+      menu(msg)
+    }
+    else if (msg.body.startsWith("!imgm")) {
+      imenu(msg)
+    }
+    else if (msg.body.startsWith("!what")) {
+      query = msg.body.replace("!what ", "")
+      what(query, msg)
+    }
+    else if (msg.body.startsWith("!ai ")){
+      query = msg.body.replace("!ai ", "")
+      youchat(query, msg)
+    }
+    else if (msg.body.startsWith("!gai ")){
+      query = msg.body.replace("!gai ", "")
+      gemini_pro(query, msg)
+    }
+    else if (msg.body.startsWith("!cai ")){
+      query = msg.body.replace("!cai ", "")
+      gpt4(query, msg)
+    }
+    else if (msg.body.startsWith("!img ")){
+      query = msg.body.replace("!img ", "")
+      sdxl(query, msg)
+    }
+    else if (msg.body.startsWith("!i.std ")){
+      query = msg.body.replace("!i.std ", "")
+      stable(query, msg)
+    }
+    else if (msg.body.startsWith("!i.some ")){
+      query = msg.body.replace("!i.some ", "")
+      something(query, msg)
+    }
+    else if (msg.body.startsWith("!i.cntr ")){
+      query = msg.body.replace("!i.cntr ", "")
+      counterfeit(query, msg)
+    }
+    else if (msg.body.startsWith("!i.modi ")){
+      query = msg.body.replace("!i.modi ", "")
+      moderndisney(query, msg)
+    }
+    else if (msg.body.startsWith("!i.prot ")){
+      query = msg.body.replace("!i.prot ", "")
+      protogen(query, msg)
+    }
+    else if (msg.body.startsWith("!i.pix ")){
+      query = msg.body.replace("!i.pix ", "")
+      pixel(query, msg)
+    }
+    else if (msg.body.startsWith("!i.logo ")){
+      query = msg.body.replace("!i.logo ", "")
+      logo(query, msg)
+    }
+    else if (msg.body.startsWith("!i.mid ")){
+      query = msg.body.replace("!i.mid ", "")
+      midjourney(query, msg)
+    }
+    else if (msg.body.startsWith("!meme ")){
+      query = msg.body.replace("!meme ", "")
+      meme(msg, query)
+    }
+    else if (msg.body.startsWith("!jail")){
+      jail_hatsudo(jail_msg)
+    }
+
+    // Always
+    if (msg.body.includes("📚") && msg.body.includes("Sources"))
+    youchatId = msg.from
+    if (msg.from == youchatId && youchatBusy) {
+      if (!msg.body.includes("great to meet you!")) {
+        youchatMsg.reply(msg.body)
+        youchatBusy = false
+      } else {
+        youchatMsg.react("⏳")
+        youchatBusy = false
+        youchat("", youchatMsg)
+      }
+    }
+  
+    hehe(msg)
+
+    // Gacha
+    tokke(msg)
+  } catch (err) {
+    console.log("main", query, err)
+  }
 })
 
 client.initialize();
