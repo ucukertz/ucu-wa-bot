@@ -153,6 +153,7 @@ async function on_message(msg) {
     }
   
     hehe(msg)
+    tehe(msg)
 
     // Gacha
     tokke(msg)
@@ -767,9 +768,9 @@ function jail_hatsudo(msg) {
 /**
  * @param {wajs.Message} msg 
  */
-async function hehe(msg) {
+function hehe(msg) {
   function hehe_chk(str) {
-    const regex = /h\s*e\s*h\s*e\s*/i
+    const regex = /h\s*e\s*h\s*e/i
     return regex.test(str)
   }
 
@@ -781,23 +782,57 @@ async function hehe(msg) {
         jail_hatsudo(msg)
       }
     }
-    if (msg.type == wajs.MessageTypes.IMAGE) {
-      let mm = await msg.downloadMedia()
-      console.log("MM", mm.mimetype)
-    }
-    else if (msg.type == wajs.MessageTypes.STICKER) {
-      let mm = await msg.downloadMedia()
-      console.log("MMS", mm.mimetype)
-    }
-    else if (msg.isGif) {
-      let mm = await msg.downloadMedia()
-      console.log("MMG", mm.mimetype)
-    }
 
     if (jail_is_hatsudo) {
       let dr_sec = Math.random()*120
       setTimeout(() => {
         msg.react("😡")
+      }, dr_sec*1000)
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+let nathapon = "7095"
+let uwu_is_hatsudo = false
+let uwu = false
+let uwu_msg
+
+/**
+ * @param {wajs.Message} msg 
+ */
+function uwu_hatsudo(msg) {
+  msg.reply("Kawaii 🤮")
+  if (uwu_is_hatsudo) clearTimeout(uwu)
+  uwu_is_hatsudo = true
+  uwu = setTimeout(() => {
+    uwu_is_hatsudo = false
+  }, 60000*60*24*7)
+}
+
+/**
+ * @param {wajs.Message} msg 
+ */
+function tehe(msg) {
+  function tehe_chk(str) {
+    const regex = /t\s*[e\s]+[h\s]+\s*e/i
+    return regex.test(str)
+  }
+
+  if (!msg.author || !msg.author.includes(nathapon)) return
+  uwu_msg = msg
+  try {
+    if (msg.body) {
+      if (tehe_chk(msg.body)) {
+        uwu_hatsudo(msg)
+      }
+    }
+
+    if (uwu_is_hatsudo) {
+      let dr_sec = Math.random()*120
+      setTimeout(() => {
+        msg.react("😛")
       }, dr_sec*1000)
     }
   } catch (err) {
