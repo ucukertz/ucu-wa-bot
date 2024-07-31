@@ -135,11 +135,6 @@ async function sd_exec(prompt, ckpt, chara) {
     console.log("SD START", new Date().toLocaleString())
     console.log("CKPT", ckpt.name)
     prompt.pos = prompt.pos.toLowerCase()
-    let ti_base = prompt.pos.includes("nsfw") ? "zPDXLxxx" : "zPDXL"
-
-    // Handle ckpt
-    prompt.pos = prompt.pos.concat(ckpt.addpos)
-    prompt.neg = prompt.neg.concat(ckpt.addneg)
 
     // Handle chara
     if (chara) {
@@ -151,16 +146,27 @@ async function sd_exec(prompt, ckpt, chara) {
         prompt.pos = chara.traits.concat(prompt.pos)
 
         prompt.pos = chara.addpos.concat(prompt.pos)
-        prompt.neg = chara.addneg.concat(prompt.neg)
+        prompt.neg = chara.addneg.concat(prompt.neg)        
+    }
 
+    // Handle ckpt
+    prompt.pos = prompt.pos.concat(ckpt.addpos)
+    prompt.neg = prompt.neg.concat(ckpt.addneg)
+
+    let ti_base = prompt.pos.includes("nsfw") ? "zPDXLxxx" : "zPDXL"
+    if (chara) {
         prompt.pos = prompt.pos.concat(`, [:${ti_base}:${chara.tis}]`)
         prompt.neg = prompt.neg.concat(`, [:${ti_base}-neg:${chara.tis}]`)
     } else {
         prompt.pos = prompt.pos.concat(`, ${ti_base}]`)
         prompt.neg = prompt.neg.concat(`, ${ti_base}-neg]`)
     }
+
     prompt.pos = prompt.pos.replace(", , ,", ",")
     prompt.pos = prompt.pos.replace(", ,", ",")
+    prompt.neg = prompt.neg.replace(", , ,", ",")
+    prompt.neg = prompt.neg.replace(", ,", ",")
+
 
     let ready = await is_sd_ready()
     if (!ready) throw new Error("SD NOT READY")

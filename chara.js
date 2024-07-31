@@ -304,7 +304,7 @@ export let chara = [
     new Chara("hijiri byakuren",
         "1girl, hijiri_byakuren, touhou, ",
         "white_dress, cross-laced_clothes, layered_dress, black_dress, juliet_sleeves, ",
-        "<lora:Touhou_pony:0.7>, "),
+        "gradient hair, <lora:Touhou_pony:0.7>, "),
     new Chara("houjuu nue", 
         "1girl, houjuu_nue, touhou, asymmetrical_wings, red_wings, blue_wings, ",
         "black_dress, short_sleeves, black_thighhighs, red_bowtie, center_frills, ",
