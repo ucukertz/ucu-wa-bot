@@ -204,7 +204,7 @@ export let chara = [
   new Chara("hieda no akyuu",
     "1girl, hieda_no_akyuu, touhou, hair_flower, white_flower, ",
     "green_kimono, long_sleeves, wide_sleeves, red_skirt, yellow_kimono, floral_print, ", 
-    "<lora:Touhou_pony:0.7>, "),
+    "medium hair, <lora:Touhou_pony:0.8>, "),
   new Chara("aki shizuha", 
     "1girl, aki_shizuha, touhou, autumn_leaves, maple_leaf, ",
     "long_sleeves, red_skirt, buttons, red_shirt, collared_shirt, ", 
