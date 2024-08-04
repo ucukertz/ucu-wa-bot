@@ -145,8 +145,8 @@ async function sd_exec(prompt, ckpt, chara) {
     prompt.pos = prompt.pos.replace(chara.id, "")
     prompt.pos = chara.traits.concat(prompt.pos)
 
-    prompt.pos = chara.addpos.concat(prompt.pos)
-    prompt.neg = chara.addneg.concat(prompt.neg)        
+    prompt.pos = prompt.pos.concat(chara.addpos)
+    prompt.neg = prompt.neg.concat(chara.addneg)    
   }
 
   // Handle ckpt
