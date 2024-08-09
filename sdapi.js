@@ -115,8 +115,8 @@ async function is_sd_ready() {
     method: 'get',
     url: url.SD_API_BASE + "/sdapi/v1/sd-models",
     auth: {
-      username: keys.SD_API_USERNAME,
-      password: keys.SD_API_PASSWORD
+      username: keys.COMMON_BAUTH_USER,
+      password: keys.COMMON_BAUTH_PASS
     },
     signal: AbortSignal(50000),
   }).catch(() => {return false})
@@ -194,8 +194,8 @@ async function sd_exec(prompt, ckpt, chara) {
     "x-use-cache": false,
   },
   auth: {
-    username: keys.SD_API_USERNAME,
-    password: keys.SD_API_PASSWORD
+    username: keys.COMMON_BAUTH_USER,
+    password: keys.COMMON_BAUTH_PASS
   },
   signal: AbortSignal(10000)
   })
@@ -210,8 +210,8 @@ async function sd_exec(prompt, ckpt, chara) {
     "x-use-cache": false,
   },
   auth: {
-    username: keys.SD_API_USERNAME,
-    password: keys.SD_API_PASSWORD
+    username: keys.COMMON_BAUTH_USER,
+    password: keys.COMMON_BAUTH_PASS
   },
   signal: AbortSignal(40000)
   })
