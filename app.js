@@ -65,6 +65,7 @@ async function on_message(msg) {
       msg.reply('pong');
     }
     else if (msg.body.startsWith("!menu")) {
+
       menu(msg)
     }
     else if (msg.body.startsWith("!imgm")) {
