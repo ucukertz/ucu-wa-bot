@@ -130,8 +130,8 @@ async function on_message(msg) {
       query = msg.body.replace("!i.mid ", "")
       midjourney(query, msg)
     }
-    else if (msg.body.startsWith("!i.wolf ")){
-      query = msg.body.replace("!i.wolf ", "")
+    else if (msg.body.startsWith("!i.foxy ")){
+      query = msg.body.replace("!i.foxy ", "")
       fox(query, msg)
     }
     else if (msg.body.startsWith("!i.nai ")){
@@ -150,16 +150,12 @@ async function on_message(msg) {
     }
 
     // Always
-    if (msg.body.includes("📚") && msg.body.includes("Sources"))
-    youchatId = msg.from
-    if (msg.from == youchatId && youchatBusy) {
+    if (msg.from == keys.YOU_CHAT_ID && youchatMsg && youchatBusy) {
       if (!msg.body.includes("great to meet you!")) {
         youchatMsg.reply(msg.body)
         youchatBusy = false
       } else {
         youchatMsg.react("⏳")
-        youchatBusy = false
-        youchat("", youchatMsg)
       }
     }
   
@@ -215,7 +211,7 @@ function imenu(msg) {
       "*!i.mid* OpenMidjourney",
       "",
       "*A1111*",
-      "*!i.wolf* Foxya v4",
+      "*!i.foxy* Foxya v4",
       "*!i.nai* Open nai3"
     )
     msg.reply(reply)
@@ -245,7 +241,7 @@ function what(query, msg) {
       case "i.pix": msg.reply("[SDXL] Pixel Art LoRa txt2img"); break;
       case "i.logo": msg.reply("[SDXL] Logo Redmond txt2img. Specializes in creating logo images."); break;
       case "i.mid": msg.reply("Open source version of Midjourney V4 txt2img."); break;
-      case "i.wolf": msg.reply("[A1111] Foxya txt2img. Cutesy anime-style.")
+      case "i.foxy": msg.reply("[A1111] Foxya txt2img. Cutesy anime-style.")
       case "i.nai": msg.reply("[A1111] Open nai3 txt2img. Nai3 default style.")
       case "meme": msg.reply("Generate memes assisted with generative AI."); break;
       case "what": msg.reply("*U wot m8?*"); break;
@@ -371,7 +367,6 @@ async function dolphin(query, msg) {
 
 // Youchat
 
-let youchatId = ""
 let youchatMsg = ""
 let youchatQuery = ""
 let youchatBusy = false
@@ -385,10 +380,6 @@ async function youchat(query, msg) {
     query = youchatQuery
   }
   try {
-    if (youchatId == "") {
-      msg.reply(saad("Youbot is sleeping 💤"))
-      return
-    }
     if (youchatBusy) {
       msg.react("❌")
       return
@@ -397,7 +388,7 @@ async function youchat(query, msg) {
     youchatBusy = true
     youchatMsg = msg
     youchatQuery = query
-    client.sendMessage(youchatId, youchatQuery)
+    client.sendMessage(keys.YOU_CHAT_ID, youchatQuery)
   } catch (err) {
     console.log(err)
     msg.reply(saad(err))
@@ -921,8 +912,8 @@ async function tokke(msg) {
     let query = msg.body
 
     try {
-      let aires = await llama.createChatCompletion({
-        model: "dolphin-llama3:70b",
+      let aires = await openai.createChatCompletion({
+        model: "gpt-4o",
         messages: [{role: "system", content: "Respond to user messages with two sentences at most." +
                                              "Be as memey as possible."}, 
         {role: "user", content: query}],
