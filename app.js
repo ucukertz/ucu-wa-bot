@@ -131,6 +131,10 @@ async function on_message(msg) {
       query = msg.body.replace("!i.mid ", "")
       midjourney(query, msg)
     }
+    else if (msg.body.startsWith("!i.wai ")){
+      query = msg.body.replace("!i.wai ", "")
+      wai(query, msg)
+    }
     else if (msg.body.startsWith("!i.foxy ")){
       query = msg.body.replace("!i.foxy ", "")
       fox(query, msg)
@@ -212,7 +216,8 @@ function imenu(msg) {
       "*!i.logo* LogoRedmond",
       "*!i.mid* OpenMidjourney",
       "",
-      "*A1111*",
+      "*A1111* - Premium GPU 💪",
+      "*!i.wai* Waifu XL v5",
       "*!i.foxy* Foxya v4",
       "*!i.nai* Open nai3"
     )
@@ -243,8 +248,9 @@ function what(query, msg) {
       case "i.pix": msg.reply("[SDXL] Pixel Art LoRa txt2img"); break;
       case "i.logo": msg.reply("[SDXL] Logo Redmond txt2img. Specializes in creating logo images."); break;
       case "i.mid": msg.reply("Open source version of Midjourney V4 txt2img."); break;
-      case "i.foxy": msg.reply("[A1111] Foxya txt2img. Cutesy anime-style.")
-      case "i.nai": msg.reply("[A1111] Open nai3 txt2img. Nai3 default style.")
+      case "i.wai": msg.reply("[A1111] Waifu XL txt2img. Knows lots of waifus and husbandos. Understands both natural lang and booru tags."); break;
+      case "i.foxy": msg.reply("[A1111] Foxya txt2img. Cutesy anime-style."); break;
+      case "i.nai": msg.reply("[A1111] Open nai3 txt2img. Nai3 default style."); break;
       case "meme": msg.reply("Generate memes assisted with generative AI."); break;
       case "what": msg.reply("*U wot m8?*"); break;
       default: msg.reply(query + ' (2)\nSend "!menu" for command list'); break;
@@ -708,6 +714,25 @@ async function logo(query, msg, attempt = 0) {
 }
 
 // Cloud SD
+
+/**
+ * @param {string} query 
+ * @param {wajs.Message} msg 
+ * @param {Number} attempt
+ */
+async function wai(query, msg, attempt=0) {
+  try {
+    let img64 = await sd_api("wai", query)
+    let ans = new MessageMedia("image/png", img64)
+    msg.reply(ans)
+  } catch (err) {
+    console.log(err)
+    if (!attempt) msg.react("⏳")
+    attempt++
+    if (attempt < 10) setTimeout(async () => wai(query, msg, attempt), 3000)
+    else msg.reply(saad(giveup))
+  }
+}
 
 /**
  * @param {string} query 

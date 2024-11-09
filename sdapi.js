@@ -29,14 +29,31 @@ class Ckpt {
       "deformed anatomy, deformed fingers, censored, realistic, 3d, bald, chibi ",
       "BREAK score_4, score_5, score_6, low quality, worst quality"
     )
+    this.pdxl = true
+
+    return this
+  }
+
+  ILU() {
+    this.addpos = this.addpos.concat(" ",
+      "BREAK vibrant_colors, colorful, masterpiece, best quality, amazing quality, very aesthetic, absurdres, newest, "
+    )
+    this.addneg = this.addneg.concat(" ",
+      "chibi, bald, bad anatomy, poorly drawn, deformed anatomy, deformed fingers, censored, mosaic_censoring, bar_censor, shota, ",
+      "BREAK lowres, (bad quality, worst quality:1.2), sketch, jpeg artifacts, censor, blurry,"
+    )
+
     return this
   }
 
   name = ""
-  sampler = ""
+  sampler = "Euler a"
   n_sample = 40
   addpos = ""
   addneg = ""
+
+  sdxl = true
+  pdxl = false
 }
 
 class SDprompt {
@@ -58,6 +75,7 @@ class SDprompt {
  * @type {Ckpt[]}
  */
 const checkpoints = [
+  new Ckpt("wai").ILU(),
   new Ckpt("fox", "DPM++ 2M").PD(),
   new Ckpt("nai3").PD(),
   new Ckpt("jugg10"),
@@ -123,22 +141,13 @@ async function is_sd_ready() {
 
   if (res.status != 200) return false
   return true
-} 
+}
 
-/**
- * @param {SDprompt} prompt 
- * @param {Ckpt} ckpt 
- * @param {Chara} chara 
- * @returns {Promise<string>}
- */
-async function sd_exec(prompt, ckpt, chara) {
-  console.log("SD START", new Date().toLocaleString())
-  console.log("CKPT", ckpt.name)
-  prompt.pos = prompt.pos.toLowerCase()
-
+function pdxl_exec(prompt, ckpt, chara)
+{
   // Handle chara
   if (chara) {
-    console.log("CHARA", chara.id)
+    console.log("PDXL CHARA", chara.id)
     prompt.pos = prompt.pos.includes("cosplay") ? 
     prompt.pos.replace("cosplay", "") : chara.clothes.concat(prompt.pos)
 
@@ -162,11 +171,31 @@ async function sd_exec(prompt, ckpt, chara) {
     prompt.neg = prompt.neg.concat(`, ${ti_base}-neg]`)
   }
 
+  return prompt
+}
+
+/**
+ * @param {SDprompt} prompt 
+ * @param {Ckpt} ckpt 
+ * @param {Chara} chara 
+ * @returns {Promise<string>}
+ */
+async function sd_exec(prompt, ckpt, chara) {
+  console.log("SD START", new Date().toLocaleString())
+  console.log("CKPT", ckpt.name)
+  prompt.pos = prompt.pos.toLowerCase()
+
+  if (ckpt.pdxl) {
+    prompt = pdxl_exec(prompt, ckpt, chara)
+  } else {
+    prompt.pos = prompt.pos.concat(ckpt.addpos)
+    prompt.neg = prompt.neg.concat(ckpt.addneg)
+  }
+
   prompt.pos = prompt.pos.replace(", , ,", ",")
   prompt.pos = prompt.pos.replace(", ,", ",")
   prompt.neg = prompt.neg.replace(", , ,", ",")
   prompt.neg = prompt.neg.replace(", ,", ",")
-
 
   let ready = await is_sd_ready()
   if (!ready) throw new Error("SD NOT READY")
