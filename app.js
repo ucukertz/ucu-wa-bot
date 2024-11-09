@@ -162,6 +162,7 @@ async function on_message(msg) {
   
     hehe(msg)
     tehe(msg)
+    zeta(msg)
 
     // Gacha
     tokke(msg)
@@ -859,8 +860,17 @@ let uwu_msg
 /**
  * @param {wajs.Message} msg 
  */
+async function disco(msg, caption="DISCO TIME")
+{
+  let disco_gif = await MessageMedia.fromUrl("https://c.tenor.com/t8bOq12F_rsAAAAC/tenor.gif")
+  msg.reply(caption, undefined, {sendVideoAsGif: true, media: disco_gif})
+}
+
+/**
+ * @param {wajs.Message} msg 
+ */
 function uwu_hatsudo(msg) {
-  msg.reply("Kawaii 🤮")
+  disco(msg, "Kawaii 🤮")
   if (uwu_is_hatsudo) clearTimeout(uwu)
   uwu_is_hatsudo = true
   uwu = setTimeout(() => {
@@ -873,7 +883,7 @@ function uwu_hatsudo(msg) {
  */
 function tehe(msg) {
   function tehe_chk(str) {
-    const regex = /t\s*[e\s]+[h\s]+\s*e/i
+    const regex = /t\s*e+[e\s]*\s*h\s*e/i
     return regex.test(str)
   }
 
@@ -894,6 +904,33 @@ function tehe(msg) {
     }
   } catch (err) {
     console.log(err)
+  }
+}
+
+const zetathres = 3
+let zetacount = 0
+let zetaday = -1
+
+/**
+ * @param {wajs.Message} msg 
+ */
+function zeta(msg) {
+  let zeta_caption = "Zeta ter00s 🥵"
+
+  let today = new Date().getDay()
+  if (zetaday != today) {
+    zetacount = 0
+    zetaday = today
+  }
+
+  if (msg.body.toLowerCase().includes("zeta")) {
+    if (msg.author.includes(nathapon)) {
+      if (zetacount == 0) disco(msg, zeta_caption)
+      if (zetacount >= zetathres) zetacount = 0
+    }
+
+    zetacount++
+    if (zetacount == zetathres) disco(msg, zeta_caption)
   }
 }
 
