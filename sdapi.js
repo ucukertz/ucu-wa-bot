@@ -8,7 +8,7 @@ class Ckpt {
    * @param {string} sampler 
    * @param {number} n_sample
    */
-  constructor(name, sampler="Euler a", n_sample=40) {
+  constructor(name, sampler="Euler a", n_sample=32) {
     this.name = name
     this.sampler = sampler
     this.n_sample = n_sample
@@ -20,27 +20,13 @@ class Ckpt {
     return this
   }
 
-  PD() {
-    this.addpos = this.addpos.concat(" ",
-      "BREAK score_9, score_8_up, score_7_up, score_6_up ",
-      "BREAK source_anime, masterpiece, best quality, shiny_skin"
-    )
-    this.addneg = this.addneg.concat(" ",
-      "deformed anatomy, deformed fingers, censored, realistic, 3d, bald, chibi ",
-      "BREAK score_4, score_5, score_6, low quality, worst quality"
-    )
-    this.pdxl = true
-
-    return this
-  }
-
-  ILU() {
+  US() {
     this.addpos = this.addpos.concat(" ",
       "BREAK vibrant_colors, colorful, masterpiece, best quality, amazing quality, very aesthetic, absurdres, newest, "
     )
     this.addneg = this.addneg.concat(" ",
-      "chibi, bald, bad anatomy, poorly drawn, deformed anatomy, deformed fingers, censored, mosaic_censoring, bar_censor, shota, ",
-      "BREAK lowres, (bad quality, worst quality:1.2), sketch, jpeg artifacts, censor, blurry,"
+      "chibi, bald, bad anatomy, poorly drawn, deformed anatomy, deformed fingers, censored, mosaic_censoring, bar_censor, shota, empty_eyes, multicolored_hair, ",
+      "BREAK lowres, (bad quality, worst quality:1.2), sketch, jpeg artifacts, censor, blurry, watermark"
     )
 
     return this
@@ -48,12 +34,11 @@ class Ckpt {
 
   name = ""
   sampler = "Euler a"
-  n_sample = 40
+  n_sample = 0
   addpos = ""
   addneg = ""
 
   sdxl = true
-  pdxl = false
 }
 
 class SDprompt {
@@ -75,9 +60,8 @@ class SDprompt {
  * @type {Ckpt[]}
  */
 const checkpoints = [
-  new Ckpt("wai").ILU(),
-  new Ckpt("fox", "DPM++ 2M").PD(),
-  new Ckpt("nai3").PD(),
+  new Ckpt("wai").US(),
+  new Ckpt("mei").US(),
   new Ckpt("jugg10"),
 ]
 
@@ -143,11 +127,20 @@ async function is_sd_ready() {
   return true
 }
 
-function pdxl_exec(prompt, ckpt, chara)
-{
+/**
+ * @param {SDprompt} prompt 
+ * @param {Ckpt} ckpt 
+ * @param {Chara} chara 
+ * @returns {Promise<string>}
+ */
+async function sd_exec(prompt, ckpt, chara) {
+  console.log("SD START", new Date().toLocaleString())
+  console.log("CKPT", ckpt.name)
+  prompt.pos = prompt.pos.toLowerCase()
+
   // Handle chara
   if (chara) {
-    console.log("PDXL CHARA", chara.id)
+    console.log("CHARA", chara.id)
     prompt.pos = prompt.pos.includes("cosplay") ? 
     prompt.pos.replace("cosplay", "") : chara.clothes.concat(prompt.pos)
 
@@ -161,36 +154,6 @@ function pdxl_exec(prompt, ckpt, chara)
   // Handle ckpt
   prompt.pos = prompt.pos.concat(ckpt.addpos)
   prompt.neg = prompt.neg.concat(ckpt.addneg)
-
-  let ti_base = prompt.pos.includes("nsfw") ? "zPDXLxxx" : "zPDXL"
-  if (chara) {
-    prompt.pos = prompt.pos.concat(`, [:${ti_base}:${chara.tis}]`)
-    prompt.neg = prompt.neg.concat(`, [:${ti_base}-neg:${chara.tis}]`)
-  } else {
-    prompt.pos = prompt.pos.concat(`, ${ti_base}]`)
-    prompt.neg = prompt.neg.concat(`, ${ti_base}-neg]`)
-  }
-
-  return prompt
-}
-
-/**
- * @param {SDprompt} prompt 
- * @param {Ckpt} ckpt 
- * @param {Chara} chara 
- * @returns {Promise<string>}
- */
-async function sd_exec(prompt, ckpt, chara) {
-  console.log("SD START", new Date().toLocaleString())
-  console.log("CKPT", ckpt.name)
-  prompt.pos = prompt.pos.toLowerCase()
-
-  if (ckpt.pdxl) {
-    prompt = pdxl_exec(prompt, ckpt, chara)
-  } else {
-    prompt.pos = prompt.pos.concat(ckpt.addpos)
-    prompt.neg = prompt.neg.concat(ckpt.addneg)
-  }
 
   prompt.pos = prompt.pos.replace(", , ,", ",")
   prompt.pos = prompt.pos.replace(", ,", ",")
@@ -246,7 +209,7 @@ async function sd_exec(prompt, ckpt, chara) {
   })
 
   if (!res.data.images[0]) {
-  throw new Error("SD NO IMAGE")
+    throw new Error("SD NO IMAGE")
   }
   return res.data.images[0]
 }
