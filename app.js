@@ -299,7 +299,7 @@ async function gpt4(query, msg) {
     if (!is_sys) gpt4_chat.push({role: "user", content: query})
 
     let res = await openai.createChatCompletion({
-      model: "gpt-4o",
+      model: "gpt-4o-mini",
       messages: gpt4_chat,
       temperature: 0.5,
       max_tokens: 2000,
@@ -970,7 +970,7 @@ async function tokke(msg) {
 
     try {
       let aires = await openai.createChatCompletion({
-        model: "gpt-4o",
+        model: "gpt-4o-mini",
         messages: [{role: "system", content: "Respond to user messages with two sentences at most." +
                                              "Be as memey as possible."}, 
         {role: "user", content: query}],
