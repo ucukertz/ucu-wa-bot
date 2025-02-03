@@ -25,7 +25,7 @@ class Ckpt {
       "BREAK vibrant_colors, colorful, masterpiece, best quality, amazing quality, very aesthetic, absurdres, newest, "
     )
     this.addneg = this.addneg.concat(" ",
-      "chibi, bald, bad anatomy, poorly drawn, deformed anatomy, deformed fingers, censored, mosaic_censoring, bar_censor, shota, empty_eyes, multicolored_hair, ",
+      "chibi, bald, bad anatomy, poorly drawn, deformed anatomy, deformed fingers, censored, mosaic_censoring, bar_censor, shota, empty_eyes, multicolored_hair, symbol-shaped_pupils, ",
       "BREAK lowres, (bad quality, worst quality:1.2), sketch, jpeg artifacts, censor, blurry, watermark"
     )
 
