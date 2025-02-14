@@ -53,6 +53,18 @@ async function message_print(msg) {
   console.log(msg.body)
 }
 
+/**
+ * @param {wajs.Message} msg 
+ * @param {string} emoji 
+ */
+async function message_reacc(msg, emoji) {
+  try {
+    msg.react(emoji)
+  } catch {
+    console.log("Reacting with", emoji, "failed!")
+  }
+}
+
 
 /**
  * @param {wajs.Message} msg 
@@ -156,7 +168,7 @@ async function on_message(msg) {
         youchatMsg.reply(msg.body)
         youchatBusy = false
       } else {
-        youchatMsg.react("⏳")
+        message_reacc(youchatMsg, "⏳")
       }
     }
   
@@ -312,7 +324,7 @@ async function gpt4(query, msg) {
     gpt4_chat.push({role: "assistant", content: ans})
     if (gpt4_chat.length > 30) {
       gpt4_chat = oai_new_chat(oai_play_default)
-      msg.react("😵")
+      message_reacc(msg, "😵")
     }
   } catch (err) {
     msg.reply(saad(err))
@@ -360,7 +372,7 @@ async function dolphin(query, msg) {
     dolphin_chat.push({role: "assistant", content: ans})
     if (dolphin_chat.length > 30) {
       dolphin_chat = oai_new_chat(oai_play_default)
-      msg.react("😵")
+      message_reacc(msg, "😵")
     }
   } catch (err) {
     msg.reply(saad(err))
@@ -383,7 +395,7 @@ async function youchat(query, msg) {
   }
   try {
     if (youchatBusy) {
-      msg.react("❌")
+      message_reacc(msg, "❌")
       return
     }
 
@@ -448,7 +460,7 @@ async function gemini_pro(query, msg) {
 
     if (gemini_history.length > 30) {
       gemini_history = []
-      msg.react("😵")
+      message_reacc(msg, "😵")
     }
   } catch (err) {
     console.log(err)
@@ -458,7 +470,7 @@ async function gemini_pro(query, msg) {
     err = "Attempt to plagiarize foiled ☹️"
     else if (err.toString().includes("one part"))
     err = "Bot breaking apart 🫠"
-    else msg.react("😵")
+    else message_reacc(msg, "😵")
 
     gemini_history = []
     msg.reply(saad(err))
@@ -500,7 +512,7 @@ async function sdxl(query, msg, attempt = 0) {
   } catch (err) {
     console.log(err)
     if (err.toString().includes("503")) {
-      if (!attempt) msg.react("⏳")
+      if (!attempt) message_reacc(msg, "⏳")
       attempt++
       if (attempt < 10) setTimeout(async () => sdxl(query, msg, attempt), 60000)
       else msg.reply(saad(giveup))
@@ -523,7 +535,7 @@ async function stable(query, msg, attempt = 0) {
   } catch (err) {
     console.log(err)
     if (err.toString().includes("503")) {
-      if (!attempt) msg.react("⏳")
+      if (!attempt) message_reacc(msg, "⏳")
       attempt++
       if (attempt < 10) setTimeout(async () => stable(query, msg, attempt), 60000)
       else msg.reply(saad(giveup))
@@ -548,7 +560,7 @@ async function something(query, msg, attempt = 0) {
   } catch (err) {
     console.log(err)
     if (err.toString().includes("503")) {
-      if (!attempt) msg.react("⏳")
+      if (!attempt) message_reacc(msg, "⏳")
       attempt++
       if (attempt < 10) setTimeout(async () => something(query, msg, attempt), 60000)
       else msg.reply(saad(giveup))
@@ -573,7 +585,7 @@ async function counterfeit(query, msg, attempt = 0) {
   } catch (err) {
     console.log(err)
     if (err.toString().includes("503")) {
-      if (!attempt) msg.react("⏳")
+      if (!attempt) message_reacc(msg, "⏳")
       attempt++
       if (attempt < 10) setTimeout(async () => something(query, msg, attempt), 60000)
       else msg.reply(saad(giveup))
@@ -598,7 +610,7 @@ async function moderndisney(query, msg, attempt = 0) {
   } catch (err) {
     console.log(err)
     if (err.toString().includes("503")) {
-      if (!attempt) msg.react("⏳")
+      if (!attempt) message_reacc(msg, "⏳")
       attempt++
       if (attempt < 10) setTimeout(async () => something(query, msg, attempt), 60000)
       else msg.reply(saad(giveup))
@@ -624,7 +636,7 @@ async function protogen(query, msg, attempt = 0) {
   } catch (err) {
     console.log(err)
     if (err.toString().includes("503")) {
-      if (!attempt) msg.react("⏳")
+      if (!attempt) message_reacc(msg, "⏳")
       attempt++
       if (attempt < 10) setTimeout(async () => something(query, msg, attempt), 60000)
       else msg.reply(saad(giveup))
@@ -647,7 +659,7 @@ async function pixel(query, msg, attempt = 0) {
   } catch (err) {
     console.log(err)
     if (err.toString().includes("503")) {
-      if (!attempt) msg.react("⏳")
+      if (!attempt) message_reacc(msg, "⏳")
       attempt++
       if (attempt < 10) setTimeout(async () => pixel(query, msg, attempt), 60000)
       else msg.reply(saad(giveup))
@@ -672,7 +684,7 @@ async function midjourney(query, msg, attempt = 0) {
   } catch (err) {
     console.log(err)
     if (err.toString().includes("503")) {
-      if (!attempt) msg.react("⏳")
+      if (!attempt) message_reacc(msg, "⏳")
       attempt++
       if (attempt < 10) setTimeout(async () => something(query, msg, attempt), 60000)
       else msg.reply(saad(giveup))
@@ -697,7 +709,7 @@ async function logo(query, msg, attempt = 0) {
   } catch (err) {
     console.log(err)
     if (err.toString().includes("503")) {
-      if (!attempt) msg.react("⏳")
+      if (!attempt) message_reacc(msg, "⏳")
       attempt++
       if (attempt < 10) setTimeout(async () => something(query, msg, attempt), 60000)
       else msg.reply(saad(giveup))
@@ -721,7 +733,7 @@ async function wai(query, msg, attempt=0) {
     msg.reply(ans)
   } catch (err) {
     console.log(err)
-    if (!attempt) msg.react("⏳")
+    if (!attempt) message_reacc(msg, "⏳")
     attempt++
     if (attempt < 10) setTimeout(async () => wai(query, msg, attempt), 3000)
     else msg.reply(saad(giveup))
@@ -740,7 +752,7 @@ async function mei(query, msg, attempt=0) {
     msg.reply(ans)
   } catch (err) {
     console.log(err)
-    if (!attempt) msg.react("⏳")
+    if (!attempt) message_reacc(msg, "⏳")
     attempt++
     if (attempt < 10) setTimeout(async () => mei(query, msg, attempt), 3000)
     else msg.reply(saad(giveup))
@@ -759,7 +771,7 @@ async function nai(query, msg, attempt=0) {
     msg.reply(ans)
   } catch (err) {
     console.log(err)
-    if (!attempt) msg.react("⏳")
+    if (!attempt) message_reacc(msg, "⏳")
     attempt++
     if (attempt < 10) setTimeout(async () => nai(query, msg, attempt), 3000)
     else msg.reply(saad(giveup))
@@ -789,7 +801,7 @@ async function fluxs(query, msg, attempt=0) {
     msg.reply(ans)
   } catch (err) {
     console.log(err)
-    if (!attempt) msg.react("⏳")
+    if (!attempt) message_reacc(msg, "⏳")
     attempt++
     if (attempt < 10) setTimeout(async () => fluxs(query, msg, attempt), 3000)
     else msg.reply(saad(giveup))
@@ -863,7 +875,7 @@ function hehe(msg) {
     if (jail_is_hatsudo) {
       let dr_sec = Math.random()*120
       setTimeout(() => {
-        msg.react("😡")
+        message_reacc(msg, "😡")
       }, dr_sec*1000)
     }
   } catch (err) {
@@ -918,7 +930,7 @@ function tehe(msg) {
     if (uwu_is_hatsudo) {
       let dr_sec = Math.random()*120
       setTimeout(() => {
-        msg.react("😛")
+        message_reacc(msg, "😛")
       }, dr_sec*1000)
     }
   } catch (err) {
@@ -1007,7 +1019,7 @@ async function tokke(msg) {
       msg.reply(ans)
     } catch (err) {
       if (!aians_err) msg.reply(aians)
-      else msg.react("😮")
+      else message_reacc(msg, "😮")
     }
   } catch (err) {
     if (err.toString().includes("400")) {
