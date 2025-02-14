@@ -158,6 +158,9 @@ async function on_message(msg) {
     else if (msg.body.startsWith("!jail")){
       jail_hatsudo(jail_msg)
     }
+    else if (msg.body.startsWith("!jails")){
+      jail_hatsudo(jail_msg, true)
+    }
     else if (msg.body.startsWith("!jwail")){
       uwu_hatsudo(uwu_msg)
     }
@@ -844,9 +847,10 @@ let jail_msg
 
 /**
  * @param {wajs.Message} msg 
+ * @param {Boolean} sneak 
  */
-function jail_hatsudo(msg) {
-  msg.reply("h3h3 or heehee 👿")
+function jail_hatsudo(msg, sneak=false) {
+  if (!sneak) msg.reply("h3h3 or heehee 👿")
   if (jail_is_hatsudo) clearTimeout(jail)
   jail_is_hatsudo = true
   jail = setTimeout(() => {
