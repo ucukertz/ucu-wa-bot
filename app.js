@@ -158,7 +158,7 @@ async function on_message(msg) {
     else if (msg.body.startsWith("!jail")){
       jail_hatsudo(jail_msg)
     }
-    else if (msg.body.startsWith("!jails")){
+    else if (msg.body.startsWith("!sjail")){
       jail_hatsudo(jail_msg, true)
     }
     else if (msg.body.startsWith("!jwail")){
